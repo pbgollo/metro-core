@@ -24,6 +24,8 @@ tests/
 └── Metro.Domain.Tests    # Testes unitários dos handlers (xUnit + NSubstitute)
 ```
 
+
+
 ### Fluxo de uma request
 
 1. Controller recebe HTTP e monta um `Command` ou `Query`.
@@ -33,6 +35,8 @@ tests/
 
 **Writes** (create/update/delete) passam pelo EF Core + Unit of Work.  
 **Reads** (get/list) usam Dapper via query repositories.
+
+
 
 ### Como adicionar um novo módulo
 
@@ -56,3 +60,4 @@ make test                           # Roda os testes unitários
 make migration name=NomeDaMigration # Cria uma migration
 make db-update                      # Aplica migrations no banco
 ```
+
