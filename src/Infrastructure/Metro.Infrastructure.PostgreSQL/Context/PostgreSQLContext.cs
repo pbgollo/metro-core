@@ -8,10 +8,12 @@ namespace Metro.Infrastructure.PostgreSQL.Contexts
     public class PostgreSQLContext : DbContext
     {
         public DbSet<User> Users { get; set; }
+        public DbSet<RefreshToken> RefreshTokens { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
             builder.ApplyConfiguration(new UserMap());
+            builder.ApplyConfiguration(new RefreshTokenMap());
         }
 
         public PostgreSQLContext(DbContextOptions<PostgreSQLContext> options) : base(options)

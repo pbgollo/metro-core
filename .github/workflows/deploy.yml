@@ -54,7 +54,8 @@
 #             },
 #             "Authentication": {
 #                 "JWT": {
-#                     "ExpiresInDays": 7,
+#                     "AccessTokenExpiresInMinutes": 60,
+#                     "RefreshTokenExpiresInDays": 7,
 #                     "Key": "${{ secrets.JWT_KEY }}"
 #                 }
 #             },

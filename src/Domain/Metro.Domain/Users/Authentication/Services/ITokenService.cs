@@ -2,6 +2,10 @@ namespace Metro.Domain.Users.Authentication.Services
 {
     public interface ITokenService
     {
-        public string GenerateToken(Entities.User user);
+        string GenerateAccessToken(Entities.User user);
+        string GenerateRefreshToken();
+        string HashRefreshToken(string refreshToken);
+        int GetAccessTokenExpiresInSeconds();
+        DateTime GetRefreshTokenExpiresAt();
     }
 }

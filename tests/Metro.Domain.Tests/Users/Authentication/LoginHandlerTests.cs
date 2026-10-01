@@ -4,6 +4,7 @@ using Metro.Domain.Users.Authentication.Queries;
 using Metro.Domain.Users.Authentication.Services;
 using Metro.Domain.Users.Entities;
 using Metro.Domain.Users.Repositories;
+using Metro.Shared.Data;
 using NSubstitute;
 using Shouldly;
 
@@ -14,11 +15,18 @@ public class LoginHandlerTests
     private readonly ITokenService _tokenService = Substitute.For<ITokenService>();
     private readonly IPasswordService _passwordService = Substitute.For<IPasswordService>();
     private readonly IUserRepository _userRepository = Substitute.For<IUserRepository>();
+    private readonly IRefreshTokenRepository _refreshTokenRepository = Substitute.For<IRefreshTokenRepository>();
+    private readonly IUnityOfWork _unityOfWork = Substitute.For<IUnityOfWork>();
     private readonly LoginHandler _sut;
 
     public LoginHandlerTests()
     {
-        _sut = new LoginHandler(_tokenService, _passwordService, _userRepository);
+        _sut = new LoginHandler(
+            _tokenService,
+            _passwordService,
+            _userRepository,
+            _refreshTokenRepository,
+            _unityOfWork);
     }
 
     [Fact]
@@ -34,7 +42,8 @@ public class LoginHandlerTests
 
         result.StatusCode.ShouldBe(HttpStatusCode.Unauthorized);
         result.Data.ShouldBeNull();
-        _tokenService.DidNotReceive().GenerateToken(Arg.Any<User>());
+        _tokenService.DidNotReceive().GenerateAccessToken(Arg.Any<User>());
+        await _unityOfWork.DidNotReceive().BeginAsync(Arg.Any<CancellationToken>());
     }
 
     [Fact]
@@ -51,7 +60,8 @@ public class LoginHandlerTests
         }, CancellationToken.None);
 
         result.StatusCode.ShouldBe(HttpStatusCode.Unauthorized);
-        _tokenService.DidNotReceive().GenerateToken(Arg.Any<User>());
+        _tokenService.DidNotReceive().GenerateAccessToken(Arg.Any<User>());
+        await _unityOfWork.DidNotReceive().BeginAsync(Arg.Any<CancellationToken>());
     }
 
     [Fact]
@@ -68,16 +78,21 @@ public class LoginHandlerTests
         }, CancellationToken.None);
 
         result.StatusCode.ShouldBe(HttpStatusCode.Unauthorized);
-        _tokenService.DidNotReceive().GenerateToken(Arg.Any<User>());
+        _tokenService.DidNotReceive().GenerateAccessToken(Arg.Any<User>());
+        await _unityOfWork.DidNotReceive().BeginAsync(Arg.Any<CancellationToken>());
     }
 
     [Fact]
-    public async Task Handle_WhenCredentialsValid_ReturnsOkWithToken()
+    public async Task Handle_WhenCredentialsValid_ReturnsOkWithAccessAndRefreshTokens()
     {
         var user = CreateActiveUser();
         _userRepository.GetEmail(user.Email).Returns(user);
         _passwordService.ConfirmPassword(Arg.Any<byte[]>(), "Secret123!").Returns(true);
-        _tokenService.GenerateToken(user).Returns("jwt-token");
+        _tokenService.GenerateRefreshToken().Returns("refresh-token");
+        _tokenService.HashRefreshToken("refresh-token").Returns("refresh-hash");
+        _tokenService.GetRefreshTokenExpiresAt().Returns(DateTime.UtcNow.AddDays(7));
+        _tokenService.GenerateAccessToken(user).Returns("access-token");
+        _tokenService.GetAccessTokenExpiresInSeconds().Returns(1800);
 
         var result = await _sut.Handle(new LoginQuery
         {
@@ -87,8 +102,14 @@ public class LoginHandlerTests
 
         result.StatusCode.ShouldBe(HttpStatusCode.OK);
         result.Data.ShouldNotBeNull();
-        result.Data!.Token.ShouldBe("jwt-token");
-        _tokenService.Received(1).GenerateToken(user);
+        result.Data!.AccessToken.ShouldBe("access-token");
+        result.Data.RefreshToken.ShouldBe("refresh-token");
+        result.Data.ExpiresIn.ShouldBe(1800);
+        await _unityOfWork.Received(1).BeginAsync(Arg.Any<CancellationToken>());
+        await _refreshTokenRepository.Received(1).RevokeAllActiveByUserId(user.Id);
+        await _refreshTokenRepository.Received(1).Create(Arg.Is<RefreshToken>(t =>
+            t.UserId == user.Id && t.TokenHash == "refresh-hash"));
+        await _unityOfWork.Received(1).CommitAsync(Arg.Any<CancellationToken>());
     }
 
     [Fact]

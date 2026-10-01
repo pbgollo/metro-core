@@ -1,6 +1,7 @@
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.RateLimiting;
+using Metro.Domain.Users.Authentication.Commands;
 using Metro.Domain.Users.Authentication.Queries;
 
 namespace Metro.Application.Controllers
@@ -20,5 +21,10 @@ namespace Metro.Application.Controllers
         [EnableRateLimiting("login")]
         public async Task<ObjectResult> Login([FromBody] LoginQuery query)
             => FromResult(await _mediator.Send(query));
+
+        [HttpPost("refresh")]
+        [EnableRateLimiting("login")]
+        public async Task<ObjectResult> Refresh([FromBody] RefreshTokenCommand command)
+            => FromResult(await _mediator.Send(command));
     }
 }

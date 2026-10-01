@@ -1,7 +1,9 @@
 using Metro.Domain.Users.Authentication.Queries;
 using Metro.Domain.Users.Authentication.Services;
 using Metro.Domain.Users.Authentication.ViewModel;
+using Metro.Domain.Users.Entities;
 using Metro.Domain.Users.Repositories;
+using Metro.Shared.Data;
 using Metro.Shared.QueryHandlers;
 using Metro.Shared.Results;
 
@@ -12,12 +14,21 @@ namespace Metro.Domain.Users.Authentication.Handlers
         private readonly ITokenService _tokenService;
         private readonly IPasswordService _passwordService;
         private readonly IUserRepository _userRepository;
+        private readonly IRefreshTokenRepository _refreshTokenRepository;
+        private readonly IUnityOfWork _unityOfWork;
 
-        public LoginHandler(ITokenService tokenService, IPasswordService passwordService, IUserRepository userRepository)
+        public LoginHandler(
+            ITokenService tokenService,
+            IPasswordService passwordService,
+            IUserRepository userRepository,
+            IRefreshTokenRepository refreshTokenRepository,
+            IUnityOfWork unityOfWork)
         {
             _tokenService = tokenService;
             _passwordService = passwordService;
             _userRepository = userRepository;
+            _refreshTokenRepository = refreshTokenRepository;
+            _unityOfWork = unityOfWork;
         }
 
         public async Task<ApiResult<LoginViewModel>> Handle(LoginQuery request, CancellationToken cancellationToken)
@@ -44,10 +55,30 @@ namespace Metro.Domain.Users.Authentication.Handlers
                     return unauthorized;
                 }
 
-                var token = _tokenService.GenerateToken(user);
+                var refreshToken = _tokenService.GenerateRefreshToken();
+                var refreshTokenEntity = new RefreshToken(
+                    user.Id,
+                    _tokenService.HashRefreshToken(refreshToken),
+                    _tokenService.GetRefreshTokenExpiresAt());
+
+                await _unityOfWork.BeginAsync(cancellationToken);
+                try
+                {
+                    await _refreshTokenRepository.RevokeAllActiveByUserId(user.Id);
+                    await _refreshTokenRepository.Create(refreshTokenEntity);
+                    await _unityOfWork.CommitAsync(cancellationToken);
+                }
+                catch
+                {
+                    await _unityOfWork.RollbackAsync(cancellationToken);
+                    throw;
+                }
+
                 return ApiResult<LoginViewModel>.Ok(new LoginViewModel
                 {
-                    Token = token
+                    AccessToken = _tokenService.GenerateAccessToken(user),
+                    RefreshToken = refreshToken,
+                    ExpiresIn = _tokenService.GetAccessTokenExpiresInSeconds()
                 });
             }
             catch (FormatException)
