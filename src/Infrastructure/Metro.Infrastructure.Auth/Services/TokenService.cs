@@ -19,7 +19,9 @@ namespace Metro.Infrastructure.Auth.Services
         {
             ArgumentNullException.ThrowIfNull(user);
 
-            var key = Encoding.ASCII.GetBytes(_configuration["Authentication:JWT:Key"]);
+            var jwtKey = _configuration["Authentication:JWT:Key"]
+                ?? throw new InvalidOperationException("Authentication:JWT:Key is not configured.");
+            var key = Encoding.ASCII.GetBytes(jwtKey);
 
             int expiresInDays = int.Parse(_configuration["Authentication:JWT:ExpiresInDays"] ?? "7");
 

@@ -25,10 +25,11 @@ namespace Metro.Infrastructure.PostgreSQL.Contexts
 
             addedEntities.ForEach(E =>
             {
-                if (typeof(Entity).IsInstanceOfType(E.Entity) && (
-                    E.Property("CreatedAt").CurrentValue == null
-                    || ((DateTime)E.Property("CreatedAt").CurrentValue).CompareTo(DateTime.MinValue) == 0
-                ))
+                if (!typeof(Entity).IsInstanceOfType(E.Entity))
+                    return;
+
+                var createdAt = E.Property("CreatedAt").CurrentValue as DateTime?;
+                if (createdAt is null || createdAt == DateTime.MinValue)
                 {
                     E.Property("CreatedAt").CurrentValue = DateTime.UtcNow;
                 }
@@ -38,11 +39,11 @@ namespace Metro.Infrastructure.PostgreSQL.Contexts
 
             editedEntities.ForEach(E =>
             {
-                if (typeof(Entity).IsInstanceOfType(E.Entity) && (
-                    E.Property("UpdatedAt").CurrentValue == null
-                    || ((DateTime)E.Property("UpdatedAt").CurrentValue).CompareTo(DateTime.MinValue) == 0
-                    || ((DateTime)E.Property("UpdatedAt").CurrentValue) < DateTime.UtcNow
-                ))
+                if (!typeof(Entity).IsInstanceOfType(E.Entity))
+                    return;
+
+                var updatedAt = E.Property("UpdatedAt").CurrentValue as DateTime?;
+                if (updatedAt is null || updatedAt == DateTime.MinValue || updatedAt < DateTime.UtcNow)
                 {
                     E.Property("UpdatedAt").CurrentValue = DateTime.UtcNow;
                 }

@@ -1,10 +1,10 @@
-.PHONY: watch run test build migration db-update
+.PHONY: watch run test build clean migration db-update
 
 APP_PROJECT=src/Application/Metro.Application/Metro.Application.csproj
 DB_PROJECT=src/Infrastructure/Metro.Infrastructure.PostgreSQL/Metro.Infrastructure.PostgreSQL.csproj
 
 watch:
-	dotnet watch run --project $(APP_PROJECT)
+	cd src/Application/Metro.Application && dotnet watch run
 
 run:
 	dotnet run --project $(APP_PROJECT)
@@ -14,6 +14,9 @@ test:
 
 build:
 	dotnet build Metro.sln
+
+clean:
+	dotnet clean Metro.sln
 
 migration:
 ifndef name

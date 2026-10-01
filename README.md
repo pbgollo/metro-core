@@ -51,6 +51,7 @@ Na raiz do repositório:
 make watch                          # API com hot reload
 make run                            # API sem watch
 make build                          # Compila a solution
+make clean                          # Limpa bin/ e obj/
 make test                           # Roda os testes unitários
 make migration name=NomeDaMigration # Cria uma migration
 make db-update                      # Aplica migrations no banco

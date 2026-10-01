@@ -34,14 +34,17 @@ builder.Services.AddAuthentication(options =>
 })
     .AddJwtBearer(options =>
     {
-        options.RequireHttpsMetadata = !bool.Parse(configuration["DeveloperEnvironments"]);
+        var isDeveloperEnvironment = bool.TryParse(configuration["DeveloperEnvironments"], out var developerEnvironments)
+            && developerEnvironments;
+        var jwtKey = configuration["Authentication:JWT:Key"]
+            ?? throw new InvalidOperationException("Authentication:JWT:Key is not configured.");
+
+        options.RequireHttpsMetadata = !isDeveloperEnvironment;
         options.SaveToken = true;
         options.TokenValidationParameters = new TokenValidationParameters
         {
             ValidateIssuerSigningKey = true,
-            IssuerSigningKey = new SymmetricSecurityKey(
-            Encoding.ASCII.GetBytes(configuration["Authentication:JWT:Key"])
-        ),
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(jwtKey)),
             ValidateIssuer = false,
             ValidateAudience = false,
             ValidateLifetime = true,

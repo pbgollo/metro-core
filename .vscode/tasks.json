@@ -29,11 +29,12 @@
             "label": "watch",
             "command": "dotnet",
             "type": "process",
+            "options": {
+                "cwd": "${workspaceFolder}/src/Application/Metro.Application"
+            },
             "args": [
                 "watch",
-                "run",
-                "--project",
-                "${workspaceFolder}/src/Application/Metro.Application/Metro.Application.csproj"
+                "run"
             ],
             "problemMatcher": "$msCompile"
         }

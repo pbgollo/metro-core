@@ -23,6 +23,12 @@ namespace Metro.Domain.Users.Authentication.Handlers
         public async Task<ApiResult<LoginViewModel>> Handle(LoginQuery request, CancellationToken cancellationToken)
         {
             var unauthorized = ApiResult<LoginViewModel>.Unauthorized();
+
+            if (string.IsNullOrWhiteSpace(request.Email) || string.IsNullOrWhiteSpace(request.Password))
+            {
+                return unauthorized;
+            }
+
             var user = await _userRepository.GetEmail(request.Email);
 
             if (user is null)

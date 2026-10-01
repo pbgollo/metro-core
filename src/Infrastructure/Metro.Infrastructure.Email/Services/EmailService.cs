@@ -16,8 +16,14 @@ namespace Metro.Infrastructure.Email.Services
 
         public async Task Send(string to, string subject, string html)
         {
+            var from = GetRequired("Email:Email");
+            var host = GetRequired("Email:Host");
+            var port = int.Parse(GetRequired("Email:Port"));
+            var user = GetRequired("Email:User");
+            var pass = GetRequired("Email:Pass");
+
             var email = new MimeMessage();
-            email.From.Add(MailboxAddress.Parse(_configuration["Email:Email"]));
+            email.From.Add(MailboxAddress.Parse(from));
             email.To.Add(MailboxAddress.Parse(to));
             email.Subject = subject;
             email.Body = new TextPart(MimeKit.Text.TextFormat.Html)
@@ -26,10 +32,14 @@ namespace Metro.Infrastructure.Email.Services
             };
 
             using var smtp = new SmtpClient();
-            await smtp.ConnectAsync(_configuration["Email:Host"], int.Parse(_configuration["Email:Port"]!), MailKit.Security.SecureSocketOptions.StartTlsWhenAvailable);
-            await smtp.AuthenticateAsync(_configuration["Email:User"], _configuration["Email:Pass"]);
+            await smtp.ConnectAsync(host, port, MailKit.Security.SecureSocketOptions.StartTlsWhenAvailable);
+            await smtp.AuthenticateAsync(user, pass);
             await smtp.SendAsync(email);
             await smtp.DisconnectAsync(true);
         }
+
+        private string GetRequired(string key)
+            => _configuration[key]
+                ?? throw new InvalidOperationException($"{key} is not configured.");
     }
 }
