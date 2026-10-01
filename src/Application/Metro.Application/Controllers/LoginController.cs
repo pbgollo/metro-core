@@ -26,5 +26,9 @@ namespace Metro.Application.Controllers
         [EnableRateLimiting("login")]
         public async Task<ObjectResult> Refresh([FromBody] RefreshTokenCommand command)
             => FromResult(await _mediator.Send(command));
+
+        [HttpPost("logout")]
+        public async Task<ObjectResult> Logout([FromBody] LogoutCommand command)
+            => FromResult(await _mediator.Send(command));
     }
 }
