@@ -1,4 +1,4 @@
-﻿using Metro.Domain.Services;
+using Metro.Domain.Services;
 using MailKit.Net.Smtp;
 using Microsoft.Extensions.Configuration;
 using MimeKit;
@@ -21,6 +21,8 @@ namespace Metro.Infrastructure.Email.Services
             var port = int.Parse(GetRequired("Email:Port"));
             var user = GetRequired("Email:User");
             var pass = GetRequired("Email:Pass");
+            var isDeveloperEnvironment = bool.TryParse(_configuration["DeveloperEnvironments"], out var developerEnvironments)
+                && developerEnvironments;
 
             var email = new MimeMessage();
             email.From.Add(MailboxAddress.Parse(from));
@@ -32,6 +34,12 @@ namespace Metro.Infrastructure.Email.Services
             };
 
             using var smtp = new SmtpClient();
+
+            if (isDeveloperEnvironment)
+            {
+                smtp.ServerCertificateValidationCallback = (_, _, _, _) => true;
+            }
+
             await smtp.ConnectAsync(host, port, MailKit.Security.SecureSocketOptions.StartTlsWhenAvailable);
             await smtp.AuthenticateAsync(user, pass);
             await smtp.SendAsync(email);

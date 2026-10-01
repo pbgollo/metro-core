@@ -9,11 +9,13 @@ namespace Metro.Infrastructure.PostgreSQL.Contexts
     {
         public DbSet<User> Users { get; set; }
         public DbSet<RefreshToken> RefreshTokens { get; set; }
+        public DbSet<PasswordRecoveryCode> PasswordRecoveryCodes { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
             builder.ApplyConfiguration(new UserMap());
             builder.ApplyConfiguration(new RefreshTokenMap());
+            builder.ApplyConfiguration(new PasswordRecoveryCodeMap());
         }
 
         public PostgreSQLContext(DbContextOptions<PostgreSQLContext> options) : base(options)

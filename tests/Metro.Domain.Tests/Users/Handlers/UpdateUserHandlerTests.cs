@@ -62,12 +62,12 @@ public class UpdateUserHandlerTests
     {
         var user = CreateUser();
         var originalPassword = user.Password;
-        var command = CreateCommand(user.Id, password: "NewPassword!");
+        var command = CreateCommand(user.Id, password: "NewPass12");
         _userRepository.GetById(user.Id).Returns(user);
 
         await _sut.Handle(command, CancellationToken.None);
 
-        _passwordService.Received(1).HashPasswordWithSalt("NewPassword!");
+        _passwordService.Received(1).HashPasswordWithSalt("NewPass12");
         user.Password.ShouldNotBe(originalPassword);
         user.Password.ShouldBe(Convert.ToBase64String(new byte[] { 9, 8, 7, 6 }));
     }

@@ -24,6 +24,7 @@ builder.Services.AddProblemDetails();
 
 builder.Services.AddScoped<ITokenService, TokenService>();
 builder.Services.AddScoped<IPasswordService, PasswordService>();
+builder.Services.AddSingleton<IPasswordRecoverySettings, PasswordRecoverySettings>();
 
 IConfiguration configuration = builder.Configuration;
 
@@ -93,6 +94,8 @@ var createUserPermitLimit = int.Parse(configuration["RateLimit:CreateUser:Permit
 var createUserWindowMinutes = int.Parse(configuration["RateLimit:CreateUser:WindowMinutes"] ?? "15");
 var loginPermitLimit = int.Parse(configuration["RateLimit:Login:PermitLimit"] ?? "10");
 var loginWindowMinutes = int.Parse(configuration["RateLimit:Login:WindowMinutes"] ?? "15");
+var passwordRecoveryPermitLimit = int.Parse(configuration["RateLimit:PasswordRecovery:PermitLimit"] ?? "5");
+var passwordRecoveryWindowMinutes = int.Parse(configuration["RateLimit:PasswordRecovery:WindowMinutes"] ?? "15");
 
 builder.Services.AddRateLimiter(options =>
 {
@@ -113,6 +116,15 @@ builder.Services.AddRateLimiter(options =>
             {
                 PermitLimit = loginPermitLimit,
                 Window = TimeSpan.FromMinutes(loginWindowMinutes),
+                QueueLimit = 0
+            }));
+    options.AddPolicy("password-recovery", httpContext =>
+        RateLimitPartition.GetFixedWindowLimiter(
+            partitionKey: httpContext.Connection.RemoteIpAddress?.ToString() ?? "unknown",
+            factory: _ => new FixedWindowRateLimiterOptions
+            {
+                PermitLimit = passwordRecoveryPermitLimit,
+                Window = TimeSpan.FromMinutes(passwordRecoveryWindowMinutes),
                 QueueLimit = 0
             }));
 });

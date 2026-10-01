@@ -17,6 +17,7 @@ namespace Metro.Infrastructure.PostgreSQL.Extensions
 
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IRefreshTokenRepository, RefreshTokenRepository>();
+            services.AddScoped<IPasswordRecoveryCodeRepository, PasswordRecoveryCodeRepository>();
             return services;
         }
     }

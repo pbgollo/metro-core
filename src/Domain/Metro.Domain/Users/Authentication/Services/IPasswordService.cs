@@ -5,6 +5,8 @@ namespace Metro.Domain.Users.Authentication.Services
         byte[] GenerateSaltedHash(string value, byte[] salt);
         bool ConfirmPassword(byte[] passwordBase, string passwordInput);
         string GenerateRandomPassword(int length);
+        string GenerateNumericCode(int length);
+        string HashCode(string code);
         byte[] HashPasswordWithSalt(string password);
     }
 }

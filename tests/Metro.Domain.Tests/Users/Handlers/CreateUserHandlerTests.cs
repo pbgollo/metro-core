@@ -1,4 +1,5 @@
 using System.Net;
+using Metro.Domain.Users.Authentication;
 using Metro.Domain.Users.Authentication.Services;
 using Metro.Domain.Users.Commands;
 using Metro.Domain.Users.Entities;
@@ -71,7 +72,7 @@ public class CreateUserHandlerTests
         created.Name.ShouldBe(command.Name);
         created.Email.ShouldBe(command.Email);
         created.Role.ShouldBe("master");
-        created.IsActive.ShouldBeFalse();
+        created.IsActive.ShouldBeTrue();
 
         await _unityOfWork.Received(1).BeginAsync(Arg.Any<CancellationToken>());
         await _userRepository.Received(1).Create(Arg.Any<User>());
@@ -96,6 +97,20 @@ public class CreateUserHandlerTests
         await _sut.Handle(command, CancellationToken.None);
 
         created!.Role.ShouldBe("client");
+    }
+
+    [Fact]
+    public async Task Handle_WhenPasswordInvalid_ReturnsBadRequest()
+    {
+        var command = CreateCommand();
+        command.Password = "123";
+        _userQueryRepository.GetByEmail(command.Email).Returns((GetUserViewModel?)null);
+
+        var result = await _sut.Handle(command, CancellationToken.None);
+
+        result.StatusCode.ShouldBe(HttpStatusCode.BadRequest);
+        result.Message.ShouldBe(PasswordPolicy.RequirementsMessage);
+        await _userRepository.DidNotReceive().Create(Arg.Any<User>());
     }
 
     [Fact]

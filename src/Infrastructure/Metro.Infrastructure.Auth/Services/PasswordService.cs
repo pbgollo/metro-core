@@ -1,4 +1,4 @@
-﻿using System.Security.Cryptography;
+using System.Security.Cryptography;
 using System.Text;
 using Metro.Domain.Users.Authentication.Services;
 
@@ -36,6 +36,29 @@ namespace Metro.Infrastructure.Auth.Services
             }
 
             return new string(password);
+        }
+
+        public string GenerateNumericCode(int length)
+        {
+            if (length <= 0)
+            {
+                throw new ArgumentOutOfRangeException(nameof(length), "O comprimento do código deve ser maior que zero.");
+            }
+
+            var code = new char[length];
+            for (var i = 0; i < length; i++)
+            {
+                code[i] = (char)('0' + RandomNumberGenerator.GetInt32(10));
+            }
+
+            return new string(code);
+        }
+
+        public string HashCode(string code)
+        {
+            ArgumentException.ThrowIfNullOrWhiteSpace(code);
+            var hash = SHA256.HashData(Encoding.UTF8.GetBytes(code));
+            return Convert.ToHexString(hash);
         }
 
         public byte[] HashPasswordWithSalt(string password)

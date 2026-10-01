@@ -1,3 +1,4 @@
+using Metro.Domain.Users.Authentication;
 using Metro.Domain.Users.Authentication.Services;
 using Metro.Domain.Users.Commands;
 using Metro.Domain.Users.Repositories;
@@ -36,6 +37,11 @@ namespace Metro.Domain.Users.Handlers
                 return ApiResult<CreatedId>.Conflict("O e-mail já está cadastrado.");
             }
 
+            if (!PasswordPolicy.IsValid(request.Password))
+            {
+                return ApiResult<CreatedId>.BadRequest(PasswordPolicy.RequirementsMessage);
+            }
+
             var hashedPassword = _passwordService.HashPasswordWithSalt(request.Password);
             var role = request.Role is "master" or "client" ? request.Role : "client";
 
@@ -45,7 +51,8 @@ namespace Metro.Domain.Users.Handlers
                 document: request.Document,
                 phone: request.Phone,
                 password: Convert.ToBase64String(hashedPassword),
-                role: role
+                role: role,
+                isActive: true
             );
 
             await _unityOfWork.BeginAsync(cancellationToken);
