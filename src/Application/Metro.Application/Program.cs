@@ -146,6 +146,12 @@ builder.Services.AddPostgreSQL(builder.Configuration);
 builder.Services.AddPostgreSQLDapper(builder.Configuration);
 builder.Services.AddFileStorage();
 
+var postgresConnection = configuration["PostgreSQL:Connection"]
+    ?? throw new InvalidOperationException("PostgreSQL:Connection is not configured.");
+
+builder.Services.AddHealthChecks()
+    .AddNpgSql(postgresConnection, name: "postgresql");
+
 var app = builder.Build();
 
 AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
@@ -175,7 +181,6 @@ app.UseRateLimiter();
 app.UseAuthentication();
 app.UseAuthorization();
 
-// Serve arquivos estáticos da pasta "Public/Storage"
 var storageRoot = Path.IsPathRooted(configuration["Storage:RootPath"])
     ? configuration["Storage:RootPath"]!
     : Path.Combine(Directory.GetCurrentDirectory(), configuration["Storage:RootPath"] ?? Path.Combine("Public", "Storage"));

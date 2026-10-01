@@ -1,5 +1,4 @@
 using System.Net;
-using Metro.Domain.Services;
 using Metro.Domain.Users.Authentication.Services;
 using Metro.Domain.Users.Commands;
 using Metro.Domain.Users.Entities;
@@ -16,14 +15,13 @@ public class UpdateUserHandlerTests
 {
     private readonly IUnityOfWork _unityOfWork = Substitute.For<IUnityOfWork>();
     private readonly IUserRepository _userRepository = Substitute.For<IUserRepository>();
-    private readonly IEmailService _emailService = Substitute.For<IEmailService>();
     private readonly IPasswordService _passwordService = Substitute.For<IPasswordService>();
     private readonly UpdateUserHandler _sut;
 
     public UpdateUserHandlerTests()
     {
         _passwordService.HashPasswordWithSalt(Arg.Any<string>()).Returns(new byte[] { 9, 8, 7, 6 });
-        _sut = new UpdateUserHandler(_unityOfWork, _userRepository, _emailService, _passwordService);
+        _sut = new UpdateUserHandler(_unityOfWork, _userRepository, _passwordService);
     }
 
     [Fact]

@@ -1,4 +1,3 @@
-using Metro.Domain.Services;
 using Metro.Domain.Users.Authentication.Services;
 using Metro.Domain.Users.Commands;
 using Metro.Domain.Users.Repositories;
@@ -12,18 +11,15 @@ namespace Metro.Domain.Users.Handlers
     {
         private readonly IUnityOfWork _unityOfWork;
         private readonly IUserRepository _userRepository;
-        private readonly IEmailService _emailService;
         private readonly IPasswordService _passwordService;
 
         public UpdateUserHandler(
             IUnityOfWork unityOfWork,
             IUserRepository userRepository,
-            IEmailService emailService,
             IPasswordService passwordService)
         {
             _unityOfWork = unityOfWork;
             _userRepository = userRepository;
-            _emailService = emailService;
             _passwordService = passwordService;
         }
 

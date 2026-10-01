@@ -19,7 +19,7 @@
             "type": "process",
             "args": [
                 "publish",
-                "${workspaceFolder}/Metro.sln",
+                "${workspaceFolder}/src/Application/Metro.Application/Metro.Application.csproj",
                 "/property:GenerateFullPaths=true",
                 "/consoleloggerparameters:NoSummary;ForceNoAlign"
             ],
@@ -33,7 +33,7 @@
                 "watch",
                 "run",
                 "--project",
-                "${workspaceFolder}/Metro.sln"
+                "${workspaceFolder}/src/Application/Metro.Application/Metro.Application.csproj"
             ],
             "problemMatcher": "$msCompile"
         }
