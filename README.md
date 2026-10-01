@@ -19,6 +19,9 @@ src/
     ├── Metro.Infrastructure.Auth              # JWT e hash de senha
     ├── Metro.Infrastructure.Email             # SMTP (MailKit)
     └── Metro.Infrastructure.File              # Storage local de arquivos
+
+tests/
+└── Metro.Domain.Tests    # Testes unitários dos handlers (xUnit + NSubstitute)
 ```
 
 
@@ -41,6 +44,16 @@ src/
 2. Implementar repositórios/mappings na Infrastructure.
 3. Expor controller em `Metro.Application/Controllers` no padrão REST (`/{id}` na rota).
 4. Se precisar de tabela nova: gerar migration (seção abaixo).
+
+---
+
+## Testes
+
+Testes unitários dos handlers em `tests/Metro.Domain.Tests` (xUnit, NSubstitute, FluentAssertions).
+
+```bash
+dotnet test tests/Metro.Domain.Tests/Metro.Domain.Tests.csproj
+```
 
 ---
 
