@@ -1,4 +1,3 @@
-using MediatR;
 using Metro.Domain.Services;
 using Metro.Domain.Users.Authentication.Services;
 using Metro.Domain.Users.Commands;
@@ -9,7 +8,7 @@ using Metro.Shared.Results;
 
 namespace Metro.Domain.Users.Handlers
 {
-    public class UpdateUserHandler : IHandler<UpdateUserCommand>
+    public class UpdateUserHandler : IHandler<UpdateUserCommand, object?>
     {
         private readonly IUnityOfWork _unityOfWork;
         private readonly IUserRepository _userRepository;
@@ -28,12 +27,12 @@ namespace Metro.Domain.Users.Handlers
             _passwordService = passwordService;
         }
 
-        public async Task<ICommandResult<Unit>> Handle(UpdateUserCommand request, CancellationToken cancellationToken)
+        public async Task<ApiResult<object?>> Handle(UpdateUserCommand request, CancellationToken cancellationToken)
         {
             var entity = await _userRepository.GetById(request.Id);
             if (entity == null)
             {
-                return CommandResult.NotFound();
+                return ApiResult<object?>.NotFound();
             }
 
             var role = request.Role is "master" or "client" ? request.Role : entity.Role;
@@ -65,7 +64,7 @@ namespace Metro.Domain.Users.Handlers
                 throw;
             }
 
-            return CommandResult.OK();
+            return ApiResult<object?>.Ok(message: "Request processed successfully.");
         }
     }
 }

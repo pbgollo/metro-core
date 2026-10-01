@@ -1,12 +1,12 @@
-using Metro.Domain.Users.Repositories;
 using Metro.Domain.Users.Queries;
+using Metro.Domain.Users.Repositories;
 using Metro.Domain.Users.ViewModel;
 using Metro.Shared.QueryHandlers;
-using Metro.Shared.Returns;
+using Metro.Shared.Results;
 
 namespace Metro.Domain.Users.QueryHandlers
 {
-    public class GetUserHandler : IQueryHandler<GetUserQuery, Return<GetUserViewModel>>
+    public class GetUserHandler : IQueryHandler<GetUserQuery, ApiResult<GetUserViewModel>>
     {
         private readonly IUserQueryRepository _userQueryRepository;
 
@@ -15,15 +15,15 @@ namespace Metro.Domain.Users.QueryHandlers
             _userQueryRepository = userQueryRepository;
         }
 
-        public async Task<Return<GetUserViewModel>> Handle(GetUserQuery query, CancellationToken cancellationToken)
+        public async Task<ApiResult<GetUserViewModel>> Handle(GetUserQuery query, CancellationToken cancellationToken)
         {
             var vm = await _userQueryRepository.GetById(query.Id);
             if (vm is null)
             {
-                return Return<GetUserViewModel>.NotFound(new GetUserViewModel());
+                return ApiResult<GetUserViewModel>.NotFound();
             }
 
-            return Return<GetUserViewModel>.OK(vm);
+            return ApiResult<GetUserViewModel>.Ok(vm);
         }
     }
 }

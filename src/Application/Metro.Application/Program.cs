@@ -10,6 +10,7 @@ using Metro.Infrastructure.File.Extensions;
 using Metro.Infrastructure.Email.Services;
 using Metro.Domain.Users.Authentication.Services;
 using Metro.Infrastructure.Auth.Services;
+using Metro.Application.Exceptions;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.IdentityModel.Tokens;
@@ -17,6 +18,9 @@ using System.Text;
 using System.Threading.RateLimiting;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
+builder.Services.AddProblemDetails();
 
 builder.Services.AddScoped<ITokenService, TokenService>();
 builder.Services.AddScoped<IPasswordService, PasswordService>();
@@ -164,6 +168,7 @@ if (app.Environment.IsDevelopment())
     });
 }
 
+app.UseExceptionHandler();
 app.UseCors("Default");
 app.UseRouting();
 app.UseRateLimiter();

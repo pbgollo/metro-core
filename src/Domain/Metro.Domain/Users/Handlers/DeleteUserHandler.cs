@@ -1,4 +1,3 @@
-using MediatR;
 using Metro.Domain.Users.Commands;
 using Metro.Domain.Users.Repositories;
 using Metro.Shared.Data;
@@ -7,7 +6,7 @@ using Metro.Shared.Results;
 
 namespace Metro.Domain.Users.Handlers
 {
-    public class DeleteUserHandler : IHandler<DeleteUserCommand>
+    public class DeleteUserHandler : IHandler<DeleteUserCommand, object?>
     {
         private readonly IUnityOfWork _unityOfWork;
         private readonly IUserRepository _userRepository;
@@ -18,13 +17,13 @@ namespace Metro.Domain.Users.Handlers
             _userRepository = userRepository;
         }
 
-        public async Task<ICommandResult<Unit>> Handle(DeleteUserCommand request, CancellationToken cancellationToken)
+        public async Task<ApiResult<object?>> Handle(DeleteUserCommand request, CancellationToken cancellationToken)
         {
             var entity = await _userRepository.GetById(request.Id);
 
             if (entity == null)
             {
-                return CommandResult.NotFound();
+                return ApiResult<object?>.NotFound();
             }
 
             await _unityOfWork.BeginAsync(cancellationToken);
@@ -32,7 +31,7 @@ namespace Metro.Domain.Users.Handlers
             {
                 await _userRepository.Delete(entity);
                 await _unityOfWork.CommitAsync(cancellationToken);
-                return CommandResult.OK();
+                return ApiResult<object?>.Ok(message: "Request processed successfully.");
             }
             catch
             {

@@ -1,10 +1,9 @@
-using MediatR;
 using Metro.Shared.Commands;
 using Metro.Shared.Results;
 
 namespace Metro.Domain.Users.Commands
 {
-    public class UpdateUserCommand : ICommand<ICommandResult<Unit>>
+    public class UpdateUserCommand : ICommand<ApiResult<object?>>
     {
         public Guid Id { get; set; }
 

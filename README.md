@@ -12,7 +12,7 @@ src/
 │   └── Metro.Application
 ├── Domain/               # Regras de negócio e contratos
 │   ├── Metro.Domain      # Entidades, commands, queries, handlers, interfaces
-│   └── Metro.Shared      # Abstrações compartilhadas (Entity, Result, UoW…)
+│   └── Metro.Shared      # Abstrações compartilhadas (Entity, ApiResult, UoW…)
 └── Infrastructure/       # Implementações técnicas
     ├── Metro.Infrastructure.PostgreSQL        # EF Core (writes + migrations)
     ├── Metro.Infrastructure.PostgreSQL.Dapper # Dapper (reads)
@@ -30,7 +30,7 @@ tests/
 
 1. Controller recebe HTTP e monta um `Command` ou `Query`.
 2. MediatR despacha para o handler correspondente no Domain.
-3. Handler usa repositórios/serviços (interfaces) e retorna `CommandResult` ou `Return<T>`.
+3. Handler usa repositórios/serviços (interfaces) e retorna `ApiResult<T>`.
 4. `ApiController.FromResult` mapeia o status HTTP.
 
 **Writes** (create/update/delete) passam pelo EF Core + Unit of Work.  

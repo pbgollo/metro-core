@@ -1,8 +1,6 @@
-using System.Net;
-using MediatR;
 using Metro.Domain.Users.Authentication.Services;
-using Metro.Domain.Users.Repositories;
 using Metro.Domain.Users.Commands;
+using Metro.Domain.Users.Repositories;
 using Metro.Domain.Users.ViewModel;
 using Metro.Shared.Data;
 using Metro.Shared.Handlers;
@@ -10,14 +8,18 @@ using Metro.Shared.Results;
 
 namespace Metro.Domain.Users.Handlers
 {
-    public class CreateUserHandler : IHandler<CreateUserCommand>
+    public class CreateUserHandler : IHandler<CreateUserCommand, CreatedId>
     {
         private readonly IUnityOfWork _unityOfWork;
         private readonly IUserQueryRepository _userQueryRepository;
         private readonly IUserRepository _userRepository;
         private readonly IPasswordService _passwordService;
 
-        public CreateUserHandler(IUnityOfWork unityOfWork, IUserRepository userRepository, IUserQueryRepository userQueryRepository, IPasswordService passwordService)
+        public CreateUserHandler(
+            IUnityOfWork unityOfWork,
+            IUserRepository userRepository,
+            IUserQueryRepository userQueryRepository,
+            IPasswordService passwordService)
         {
             _unityOfWork = unityOfWork;
             _userRepository = userRepository;
@@ -25,13 +27,13 @@ namespace Metro.Domain.Users.Handlers
             _passwordService = passwordService;
         }
 
-        public async Task<ICommandResult<Unit>> Handle(CreateUserCommand request, CancellationToken cancellationToken)
+        public async Task<ApiResult<CreatedId>> Handle(CreateUserCommand request, CancellationToken cancellationToken)
         {
             GetUserViewModel? userViewModel = await _userQueryRepository.GetByEmail(request.Email);
 
             if (userViewModel is not null)
             {
-                return new CommandResult(statusCode: HttpStatusCode.Conflict, message: "O e-mail já está cadastrado.");
+                return ApiResult<CreatedId>.Conflict("O e-mail já está cadastrado.");
             }
 
             var hashedPassword = _passwordService.HashPasswordWithSalt(request.Password);
@@ -45,12 +47,13 @@ namespace Metro.Domain.Users.Handlers
                 password: Convert.ToBase64String(hashedPassword),
                 role: role
             );
+
             await _unityOfWork.BeginAsync(cancellationToken);
             try
             {
                 await _userRepository.Create(entity);
                 await _unityOfWork.CommitAsync(cancellationToken);
-                return CommandResult.Created(entity.Id);
+                return ApiResult<CreatedId>.Created(new CreatedId(entity.Id));
             }
             catch
             {

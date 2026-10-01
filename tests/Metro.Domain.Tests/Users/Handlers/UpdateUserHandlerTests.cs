@@ -1,5 +1,4 @@
 using System.Net;
-using FluentAssertions;
 using Metro.Domain.Services;
 using Metro.Domain.Users.Authentication.Services;
 using Metro.Domain.Users.Commands;
@@ -9,6 +8,7 @@ using Metro.Domain.Users.Repositories;
 using Metro.Shared.Data;
 using NSubstitute;
 using NSubstitute.ExceptionExtensions;
+using Shouldly;
 
 namespace Metro.Domain.Tests.Users.Handlers;
 
@@ -34,7 +34,7 @@ public class UpdateUserHandlerTests
 
         var result = await _sut.Handle(command, CancellationToken.None);
 
-        result.StatusCode.Should().Be(HttpStatusCode.NotFound);
+        result.StatusCode.ShouldBe(HttpStatusCode.NotFound);
         await _unityOfWork.DidNotReceive().BeginAsync(Arg.Any<CancellationToken>());
         await _userRepository.DidNotReceive().Update(Arg.Any<User>());
     }
@@ -48,11 +48,11 @@ public class UpdateUserHandlerTests
 
         var result = await _sut.Handle(command, CancellationToken.None);
 
-        result.StatusCode.Should().Be(HttpStatusCode.OK);
-        user.Name.Should().Be(command.Name);
-        user.Email.Should().Be(command.Email);
-        user.Role.Should().Be("master");
-        user.IsActive.Should().BeTrue();
+        result.StatusCode.ShouldBe(HttpStatusCode.OK);
+        user.Name.ShouldBe(command.Name);
+        user.Email.ShouldBe(command.Email);
+        user.Role.ShouldBe("master");
+        user.IsActive.ShouldBeTrue();
 
         await _unityOfWork.Received(1).BeginAsync(Arg.Any<CancellationToken>());
         await _userRepository.Received(1).Update(user);
@@ -70,8 +70,8 @@ public class UpdateUserHandlerTests
         await _sut.Handle(command, CancellationToken.None);
 
         _passwordService.Received(1).HashPasswordWithSalt("NewPassword!");
-        user.Password.Should().NotBe(originalPassword);
-        user.Password.Should().Be(Convert.ToBase64String(new byte[] { 9, 8, 7, 6 }));
+        user.Password.ShouldNotBe(originalPassword);
+        user.Password.ShouldBe(Convert.ToBase64String(new byte[] { 9, 8, 7, 6 }));
     }
 
     [Fact]
@@ -94,9 +94,7 @@ public class UpdateUserHandlerTests
         _userRepository.GetById(user.Id).Returns(user);
         _userRepository.Update(user).ThrowsAsync(new InvalidOperationException("db error"));
 
-        var act = () => _sut.Handle(command, CancellationToken.None);
-
-        await act.Should().ThrowAsync<InvalidOperationException>();
+        await Should.ThrowAsync<InvalidOperationException>(() => _sut.Handle(command, CancellationToken.None));
         await _unityOfWork.Received(1).RollbackAsync(Arg.Any<CancellationToken>());
         await _unityOfWork.DidNotReceive().CommitAsync(Arg.Any<CancellationToken>());
     }

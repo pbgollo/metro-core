@@ -1,10 +1,9 @@
-using MediatR;
 using Metro.Shared.Commands;
 using Metro.Shared.Results;
 
 namespace Metro.Domain.Users.Commands
 {
-    public class CreateUserCommand : ICommand<ICommandResult<Unit>>
+    public class CreateUserCommand : ICommand<ApiResult<CreatedId>>
     {
         required public string Name { get; set; }
 

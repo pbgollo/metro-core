@@ -1,11 +1,11 @@
 using System.Net;
-using FluentAssertions;
 using Metro.Domain.Users.Authentication.Handlers;
 using Metro.Domain.Users.Authentication.Queries;
 using Metro.Domain.Users.Authentication.Services;
 using Metro.Domain.Users.Entities;
 using Metro.Domain.Users.Repositories;
 using NSubstitute;
+using Shouldly;
 
 namespace Metro.Domain.Tests.Users.Authentication;
 
@@ -32,7 +32,8 @@ public class LoginHandlerTests
             Password = "Secret123!"
         }, CancellationToken.None);
 
-        result.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
+        result.StatusCode.ShouldBe(HttpStatusCode.Unauthorized);
+        result.Data.ShouldBeNull();
         _tokenService.DidNotReceive().GenerateToken(Arg.Any<User>());
     }
 
@@ -49,7 +50,7 @@ public class LoginHandlerTests
             Password = "wrong"
         }, CancellationToken.None);
 
-        result.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
+        result.StatusCode.ShouldBe(HttpStatusCode.Unauthorized);
         _tokenService.DidNotReceive().GenerateToken(Arg.Any<User>());
     }
 
@@ -66,7 +67,7 @@ public class LoginHandlerTests
             Password = "Secret123!"
         }, CancellationToken.None);
 
-        result.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
+        result.StatusCode.ShouldBe(HttpStatusCode.Unauthorized);
         _tokenService.DidNotReceive().GenerateToken(Arg.Any<User>());
     }
 
@@ -84,8 +85,9 @@ public class LoginHandlerTests
             Password = "Secret123!"
         }, CancellationToken.None);
 
-        result.StatusCode.Should().Be(HttpStatusCode.OK);
-        result.Data.Token.Should().Be("jwt-token");
+        result.StatusCode.ShouldBe(HttpStatusCode.OK);
+        result.Data.ShouldNotBeNull();
+        result.Data!.Token.ShouldBe("jwt-token");
         _tokenService.Received(1).GenerateToken(user);
     }
 
@@ -101,7 +103,7 @@ public class LoginHandlerTests
             Password = "Secret123!"
         }, CancellationToken.None);
 
-        result.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
+        result.StatusCode.ShouldBe(HttpStatusCode.Unauthorized);
         _passwordService.DidNotReceive().ConfirmPassword(Arg.Any<byte[]>(), Arg.Any<string>());
     }
 

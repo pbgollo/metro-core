@@ -1,5 +1,4 @@
 using System.Net;
-using FluentAssertions;
 using Metro.Domain.Users.Authentication.Services;
 using Metro.Domain.Users.Commands;
 using Metro.Domain.Users.Entities;
@@ -7,8 +6,10 @@ using Metro.Domain.Users.Handlers;
 using Metro.Domain.Users.Repositories;
 using Metro.Domain.Users.ViewModel;
 using Metro.Shared.Data;
+using Metro.Shared.Results;
 using NSubstitute;
 using NSubstitute.ExceptionExtensions;
+using Shouldly;
 
 namespace Metro.Domain.Tests.Users.Handlers;
 
@@ -43,8 +44,9 @@ public class CreateUserHandlerTests
 
         var result = await _sut.Handle(command, CancellationToken.None);
 
-        result.StatusCode.Should().Be(HttpStatusCode.Conflict);
-        result.Message.Should().Be("O e-mail já está cadastrado.");
+        result.StatusCode.ShouldBe(HttpStatusCode.Conflict);
+        result.Message.ShouldBe("O e-mail já está cadastrado.");
+        result.Data.ShouldBeNull();
         await _userRepository.DidNotReceive().Create(Arg.Any<User>());
         await _unityOfWork.DidNotReceive().BeginAsync(Arg.Any<CancellationToken>());
         await _unityOfWork.DidNotReceive().CommitAsync(Arg.Any<CancellationToken>());
@@ -63,12 +65,13 @@ public class CreateUserHandlerTests
 
         var result = await _sut.Handle(command, CancellationToken.None);
 
-        result.StatusCode.Should().Be(HttpStatusCode.Created);
-        result.Id.Should().NotBeNull().And.Be(created!.Id);
-        created.Name.Should().Be(command.Name);
-        created.Email.Should().Be(command.Email);
-        created.Role.Should().Be("master");
-        created.IsActive.Should().BeFalse();
+        result.StatusCode.ShouldBe(HttpStatusCode.Created);
+        result.Data.ShouldNotBeNull();
+        result.Data!.Id.ShouldBe(created!.Id);
+        created.Name.ShouldBe(command.Name);
+        created.Email.ShouldBe(command.Email);
+        created.Role.ShouldBe("master");
+        created.IsActive.ShouldBeFalse();
 
         await _unityOfWork.Received(1).BeginAsync(Arg.Any<CancellationToken>());
         await _userRepository.Received(1).Create(Arg.Any<User>());
@@ -92,7 +95,7 @@ public class CreateUserHandlerTests
 
         await _sut.Handle(command, CancellationToken.None);
 
-        created!.Role.Should().Be("client");
+        created!.Role.ShouldBe("client");
     }
 
     [Fact]
@@ -104,9 +107,7 @@ public class CreateUserHandlerTests
             .Create(Arg.Any<User>())
             .ThrowsAsync(new InvalidOperationException("db error"));
 
-        var act = () => _sut.Handle(command, CancellationToken.None);
-
-        await act.Should().ThrowAsync<InvalidOperationException>();
+        await Should.ThrowAsync<InvalidOperationException>(() => _sut.Handle(command, CancellationToken.None));
         await _unityOfWork.Received(1).BeginAsync(Arg.Any<CancellationToken>());
         await _unityOfWork.Received(1).RollbackAsync(Arg.Any<CancellationToken>());
         await _unityOfWork.DidNotReceive().CommitAsync(Arg.Any<CancellationToken>());

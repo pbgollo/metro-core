@@ -24,8 +24,11 @@
 #       - name: Compilar solução
 #         run: dotnet build --no-restore --configuration Release
 
+#       - name: Executar testes
+#         run: dotnet test --no-build --configuration Release --verbosity normal
+
 #       - name: Publicar aplicação
-#         run: dotnet publish -c Release -o out
+#         run: dotnet publish src/Application/Metro.Application/Metro.Application.csproj -c Release -o out --no-build
 
 #       - name: Criar appsettings.json
 #         run: |
@@ -59,11 +62,18 @@
 #                 "CreateUser": {
 #                     "PermitLimit": 5,
 #                     "WindowMinutes": 15
+#                 },
+#                 "Login": {
+#                     "PermitLimit": 10,
+#                     "WindowMinutes": 15
 #                 }
 #             },
 #             "Storage": {
 #                 "RootPath": "Public/Storage",
 #                 "RequestPath": "/Storage"
+#             },
+#             "Cors": {
+#                 "AllowedOrigins": []
 #             },
 #             "AllowedHosts": "*"
 #           }

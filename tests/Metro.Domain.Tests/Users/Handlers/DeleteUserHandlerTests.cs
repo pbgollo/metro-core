@@ -1,5 +1,4 @@
 using System.Net;
-using FluentAssertions;
 using Metro.Domain.Users.Commands;
 using Metro.Domain.Users.Entities;
 using Metro.Domain.Users.Handlers;
@@ -7,6 +6,7 @@ using Metro.Domain.Users.Repositories;
 using Metro.Shared.Data;
 using NSubstitute;
 using NSubstitute.ExceptionExtensions;
+using Shouldly;
 
 namespace Metro.Domain.Tests.Users.Handlers;
 
@@ -29,7 +29,7 @@ public class DeleteUserHandlerTests
 
         var result = await _sut.Handle(new DeleteUserCommand { Id = id }, CancellationToken.None);
 
-        result.StatusCode.Should().Be(HttpStatusCode.NotFound);
+        result.StatusCode.ShouldBe(HttpStatusCode.NotFound);
         await _userRepository.DidNotReceive().Delete(Arg.Any<User>());
         await _unityOfWork.DidNotReceive().BeginAsync(Arg.Any<CancellationToken>());
     }
@@ -42,7 +42,7 @@ public class DeleteUserHandlerTests
 
         var result = await _sut.Handle(new DeleteUserCommand { Id = user.Id }, CancellationToken.None);
 
-        result.StatusCode.Should().Be(HttpStatusCode.OK);
+        result.StatusCode.ShouldBe(HttpStatusCode.OK);
         await _unityOfWork.Received(1).BeginAsync(Arg.Any<CancellationToken>());
         await _userRepository.Received(1).Delete(user);
         await _unityOfWork.Received(1).CommitAsync(Arg.Any<CancellationToken>());
@@ -55,9 +55,8 @@ public class DeleteUserHandlerTests
         _userRepository.GetById(user.Id).Returns(user);
         _userRepository.Delete(user).ThrowsAsync(new InvalidOperationException("db error"));
 
-        var act = () => _sut.Handle(new DeleteUserCommand { Id = user.Id }, CancellationToken.None);
-
-        await act.Should().ThrowAsync<InvalidOperationException>();
+        await Should.ThrowAsync<InvalidOperationException>(() =>
+            _sut.Handle(new DeleteUserCommand { Id = user.Id }, CancellationToken.None));
         await _unityOfWork.Received(1).RollbackAsync(Arg.Any<CancellationToken>());
         await _unityOfWork.DidNotReceive().CommitAsync(Arg.Any<CancellationToken>());
     }

@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.RateLimiting;
 using Metro.Domain.Users.Commands;
 using Metro.Domain.Users.Queries;
 using Metro.Domain.Users.ViewModel;
-using Metro.Shared.Returns;
+using Metro.Shared.Results;
 
 namespace Metro.Application.Controllers
 {
@@ -29,7 +29,7 @@ namespace Metro.Application.Controllers
             var idValue = User.FindFirstValue(ClaimTypes.Name);
             if (!Guid.TryParse(idValue, out var id))
             {
-                return FromResult(Return<GetUserViewModel>.Unauthorized(new GetUserViewModel()));
+                return FromResult(ApiResult<GetUserViewModel>.Unauthorized());
             }
 
             return FromResult(await _mediator.Send(new GetUserQuery
