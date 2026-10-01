@@ -1,0 +1,83 @@
+name: Deploy .NET
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout código
+        uses: actions/checkout@v4
+
+      - name: Configurar .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '10.0.x'
+
+      - name: Restaurar pacotes
+        run: dotnet restore
+
+      - name: Compilar solução
+        run: dotnet build --no-restore --configuration Release
+
+      - name: Publicar aplicação
+        run: dotnet publish -c Release -o out
+
+      - name: Criar appsettings.json
+        run: |
+          cat <<EOF > out/appsettings.json
+          {
+            "PostgreSQL": {
+                "Connection": "Host=${{ vars.DB_HOST }};Port=${{ vars.DB_PORT }};Database=${{ vars.DB_NAME }};Username=${{ vars.DB_USER }};Password=${{ secrets.DB_PASSWORD }};Include Error Detail=true"
+            },
+            "DeveloperEnvironments": false,
+            "Logging": {
+                "LogLevel": {
+                    "Default": "Information",
+                    "Microsoft.AspNetCore": "Warning",
+                    "Microsoft.EntityFrameworkCore.Database.Command": "Warning"
+                }
+            },
+            "Email": {
+                "Email": "${{ vars.EMAIL_SENDER }}",
+                "Host": "${{ vars.EMAIL_HOST }}",
+                "Port": "${{ vars.EMAIL_PORT }}",
+                "User": "${{ vars.EMAIL_SENDER }}",
+                "Pass": "${{ secrets.EMAIL_PASSWORD }}"
+            },
+            "Authentication": {
+                "JWT": {
+                    "ExpiresInDays": 7,
+                    "Key": "${{ secrets.JWT_KEY }}"
+                }
+            },
+            "RateLimit": {
+                "CreateUser": {
+                    "PermitLimit": 5,
+                    "WindowMinutes": 15
+                }
+            },
+            "Storage": {
+                "RootPath": "Public/Storage",
+                "RequestPath": "/Storage"
+            },
+            "Cors": {
+                "AllowedOrigins": []
+            },
+            "AllowedHosts": "*"
+          }
+          EOF
+
+      - name: Deploy para servidor
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_KEY }}
+          SERVER_USER: ${{ vars.SSH_USER }}
+          SERVER_HOST: ${{ vars.SSH_HOST }}
+        run: |
+          echo "$SSH_PRIVATE_KEY" > private_key && chmod 600 private_key
+          scp -o StrictHostKeyChecking=no -i private_key -r out/* $SERVER_USER@$SERVER_HOST:${{ vars.BACKEND_PATH }}
+          ssh -o StrictHostKeyChecking=no -i private_key $SERVER_USER@$SERVER_HOST "sudo systemctl restart metro"

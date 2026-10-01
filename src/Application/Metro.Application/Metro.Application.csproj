@@ -1,0 +1,31 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+  
+  <ItemGroup>
+    <PackageReference Include="MediatR" Version="12.4.1" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="10.0.12" />
+    <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="10.0.12" />
+    <PackageReference Include="Microsoft.IdentityModel.Tokens" Version="8.23.0" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="10.2.3" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="10.0.12">
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
+    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="8.23.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Infrastructure\Metro.Infrastructure.File\Metro.Infrastructure.File.csproj" />
+    <ProjectReference Include="..\..\Infrastructure\Metro.Infrastructure.PostgreSQL\Metro.Infrastructure.PostgreSQL.csproj" />
+    <ProjectReference Include="..\..\Domain\Metro.Domain\Metro.Domain.csproj" />
+    <ProjectReference Include="..\..\Infrastructure\Metro.Infrastructure.PostgreSQL.Dapper\Metro.Infrastructure.PostgreSQL.Dapper.csproj" />
+    <ProjectReference Include="..\..\Infrastructure\Metro.Infrastructure.Email\Metro.Infrastructure.Email.csproj" />
+    <ProjectReference Include="..\..\Infrastructure\Metro.Infrastructure.Auth\Metro.Infrastructure.Auth.csproj" />
+  </ItemGroup>
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+</Project>

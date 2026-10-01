@@ -1,0 +1,85 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{18E343C0-6A18-4BB1-ABF6-6534B80896BB}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Application", "Application", "{0D85E1CC-E672-41C8-BC95-F8746229ED35}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Metro.Application", "src\Application\Metro.Application\Metro.Application.csproj", "{A652D4F7-F87F-4DAA-BFF3-3DA524607A58}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Domain", "Domain", "{6CBF9C42-A57E-4E16-885C-5671CD228271}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Metro.Domain", "src\Domain\Metro.Domain\Metro.Domain.csproj", "{BA5B2F23-A181-43D2-A022-6EAB4D1C80E9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Metro.Shared", "src\Domain\Metro.Shared\Metro.Shared.csproj", "{98B9230E-3717-4B2A-9E95-74E31E8D4666}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Infrastructure", "Infrastructure", "{00B3505E-3100-4C3C-AC94-1EF57CED6D44}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Metro.Infrastructure.PostgreSQL", "src\Infrastructure\Metro.Infrastructure.PostgreSQL\Metro.Infrastructure.PostgreSQL.csproj", "{7C864A8F-61E9-447C-B40C-076551BB00E3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Metro.Infrastructure.File", "src\Infrastructure\Metro.Infrastructure.File\Metro.Infrastructure.File.csproj", "{0C19B30B-B492-4006-944F-283A86768BDB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Metro.Infrastructure.PostgreSQL.Dapper", "src\Infrastructure\Metro.Infrastructure.PostgreSQL.Dapper\Metro.Infrastructure.PostgreSQL.Dapper.csproj", "{BF1C0066-7925-4D76-A5D0-819354A8D862}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Metro.Infrastructure.Email", "src\Infrastructure\Metro.Infrastructure.Email\Metro.Infrastructure.Email.csproj", "{1A7B318B-4113-4386-BAEC-47F93E0DE72B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Metro.Infrastructure.Auth", "src\Infrastructure\Metro.Infrastructure.Auth\Metro.Infrastructure.Auth.csproj", "{3E15605D-0EC6-48F2-9833-ABCCC7AED49A}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{A652D4F7-F87F-4DAA-BFF3-3DA524607A58}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A652D4F7-F87F-4DAA-BFF3-3DA524607A58}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A652D4F7-F87F-4DAA-BFF3-3DA524607A58}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A652D4F7-F87F-4DAA-BFF3-3DA524607A58}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BA5B2F23-A181-43D2-A022-6EAB4D1C80E9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BA5B2F23-A181-43D2-A022-6EAB4D1C80E9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BA5B2F23-A181-43D2-A022-6EAB4D1C80E9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BA5B2F23-A181-43D2-A022-6EAB4D1C80E9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{98B9230E-3717-4B2A-9E95-74E31E8D4666}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{98B9230E-3717-4B2A-9E95-74E31E8D4666}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{98B9230E-3717-4B2A-9E95-74E31E8D4666}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{98B9230E-3717-4B2A-9E95-74E31E8D4666}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7C864A8F-61E9-447C-B40C-076551BB00E3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7C864A8F-61E9-447C-B40C-076551BB00E3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7C864A8F-61E9-447C-B40C-076551BB00E3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7C864A8F-61E9-447C-B40C-076551BB00E3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0C19B30B-B492-4006-944F-283A86768BDB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0C19B30B-B492-4006-944F-283A86768BDB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0C19B30B-B492-4006-944F-283A86768BDB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0C19B30B-B492-4006-944F-283A86768BDB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BF1C0066-7925-4D76-A5D0-819354A8D862}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BF1C0066-7925-4D76-A5D0-819354A8D862}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BF1C0066-7925-4D76-A5D0-819354A8D862}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BF1C0066-7925-4D76-A5D0-819354A8D862}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1A7B318B-4113-4386-BAEC-47F93E0DE72B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1A7B318B-4113-4386-BAEC-47F93E0DE72B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1A7B318B-4113-4386-BAEC-47F93E0DE72B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1A7B318B-4113-4386-BAEC-47F93E0DE72B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3E15605D-0EC6-48F2-9833-ABCCC7AED49A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3E15605D-0EC6-48F2-9833-ABCCC7AED49A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3E15605D-0EC6-48F2-9833-ABCCC7AED49A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3E15605D-0EC6-48F2-9833-ABCCC7AED49A}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{0D85E1CC-E672-41C8-BC95-F8746229ED35} = {18E343C0-6A18-4BB1-ABF6-6534B80896BB}
+		{A652D4F7-F87F-4DAA-BFF3-3DA524607A58} = {0D85E1CC-E672-41C8-BC95-F8746229ED35}
+		{6CBF9C42-A57E-4E16-885C-5671CD228271} = {18E343C0-6A18-4BB1-ABF6-6534B80896BB}
+		{BA5B2F23-A181-43D2-A022-6EAB4D1C80E9} = {6CBF9C42-A57E-4E16-885C-5671CD228271}
+		{98B9230E-3717-4B2A-9E95-74E31E8D4666} = {6CBF9C42-A57E-4E16-885C-5671CD228271}
+		{00B3505E-3100-4C3C-AC94-1EF57CED6D44} = {18E343C0-6A18-4BB1-ABF6-6534B80896BB}
+		{7C864A8F-61E9-447C-B40C-076551BB00E3} = {00B3505E-3100-4C3C-AC94-1EF57CED6D44}
+		{0C19B30B-B492-4006-944F-283A86768BDB} = {00B3505E-3100-4C3C-AC94-1EF57CED6D44}
+		{BF1C0066-7925-4D76-A5D0-819354A8D862} = {00B3505E-3100-4C3C-AC94-1EF57CED6D44}
+		{1A7B318B-4113-4386-BAEC-47F93E0DE72B} = {00B3505E-3100-4C3C-AC94-1EF57CED6D44}
+		{3E15605D-0EC6-48F2-9833-ABCCC7AED49A} = {00B3505E-3100-4C3C-AC94-1EF57CED6D44}
+	EndGlobalSection
+EndGlobal
