@@ -47,44 +47,36 @@ namespace Metro.Domain.Users.Authentication.Handlers
                 return unauthorized;
             }
 
-            try
-            {
-                var passwordBytes = Convert.FromBase64String(user.Password);
-                if (!_passwordService.ConfirmPassword(passwordBytes, request.Password) || !user.IsActive)
-                {
-                    return unauthorized;
-                }
-
-                var refreshToken = _tokenService.GenerateRefreshToken();
-                var refreshTokenEntity = new RefreshToken(
-                    user.Id,
-                    _tokenService.HashRefreshToken(refreshToken),
-                    _tokenService.GetRefreshTokenExpiresAt());
-
-                await _unityOfWork.BeginAsync(cancellationToken);
-                try
-                {
-                    await _refreshTokenRepository.RevokeAllActiveByUserId(user.Id);
-                    await _refreshTokenRepository.Create(refreshTokenEntity);
-                    await _unityOfWork.CommitAsync(cancellationToken);
-                }
-                catch
-                {
-                    await _unityOfWork.RollbackAsync(cancellationToken);
-                    throw;
-                }
-
-                return ApiResult<LoginViewModel>.Ok(new LoginViewModel
-                {
-                    AccessToken = _tokenService.GenerateAccessToken(user),
-                    RefreshToken = refreshToken,
-                    ExpiresIn = _tokenService.GetAccessTokenExpiresInSeconds()
-                });
-            }
-            catch (FormatException)
+            if (!_passwordService.ConfirmPassword(user.Password, request.Password) || !user.IsActive)
             {
                 return unauthorized;
             }
+
+            var refreshToken = _tokenService.GenerateRefreshToken();
+            var refreshTokenEntity = new RefreshToken(
+                user.Id,
+                _tokenService.HashRefreshToken(refreshToken),
+                _tokenService.GetRefreshTokenExpiresAt());
+
+            await _unityOfWork.BeginAsync(cancellationToken);
+            try
+            {
+                await _refreshTokenRepository.RevokeAllActiveByUserId(user.Id);
+                await _refreshTokenRepository.Create(refreshTokenEntity);
+                await _unityOfWork.CommitAsync(cancellationToken);
+            }
+            catch
+            {
+                await _unityOfWork.RollbackAsync(cancellationToken);
+                throw;
+            }
+
+            return ApiResult<LoginViewModel>.Ok(new LoginViewModel
+            {
+                AccessToken = _tokenService.GenerateAccessToken(user),
+                RefreshToken = refreshToken,
+                ExpiresIn = _tokenService.GetAccessTokenExpiresInSeconds()
+            });
         }
     }
 }

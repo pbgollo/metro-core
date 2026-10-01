@@ -51,7 +51,7 @@ public class LoginHandlerTests
     {
         var user = CreateActiveUser();
         _userRepository.GetEmail(user.Email).Returns(user);
-        _passwordService.ConfirmPassword(Arg.Any<byte[]>(), "wrong").Returns(false);
+        _passwordService.ConfirmPassword(user.Password, "wrong").Returns(false);
 
         var result = await _sut.Handle(new LoginQuery
         {
@@ -69,7 +69,7 @@ public class LoginHandlerTests
     {
         var user = CreateActiveUser(isActive: false);
         _userRepository.GetEmail(user.Email).Returns(user);
-        _passwordService.ConfirmPassword(Arg.Any<byte[]>(), "Secret123!").Returns(true);
+        _passwordService.ConfirmPassword(user.Password, "Secret123!").Returns(true);
 
         var result = await _sut.Handle(new LoginQuery
         {
@@ -87,7 +87,7 @@ public class LoginHandlerTests
     {
         var user = CreateActiveUser();
         _userRepository.GetEmail(user.Email).Returns(user);
-        _passwordService.ConfirmPassword(Arg.Any<byte[]>(), "Secret123!").Returns(true);
+        _passwordService.ConfirmPassword(user.Password, "Secret123!").Returns(true);
         _tokenService.GenerateRefreshToken().Returns("refresh-token");
         _tokenService.HashRefreshToken("refresh-token").Returns("refresh-hash");
         _tokenService.GetRefreshTokenExpiresAt().Returns(DateTime.UtcNow.AddDays(7));
@@ -112,28 +112,12 @@ public class LoginHandlerTests
         await _unityOfWork.Received(1).CommitAsync(Arg.Any<CancellationToken>());
     }
 
-    [Fact]
-    public async Task Handle_WhenPasswordIsNotBase64_ReturnsUnauthorized()
-    {
-        var user = new User("Ana", "ana@example.com", "1", "1", "not-base64!!!", "client", isActive: true);
-        _userRepository.GetEmail(user.Email).Returns(user);
-
-        var result = await _sut.Handle(new LoginQuery
-        {
-            Email = user.Email,
-            Password = "Secret123!"
-        }, CancellationToken.None);
-
-        result.StatusCode.ShouldBe(HttpStatusCode.Unauthorized);
-        _passwordService.DidNotReceive().ConfirmPassword(Arg.Any<byte[]>(), Arg.Any<string>());
-    }
-
     private static User CreateActiveUser(bool isActive = true) => new(
         name: "Ana",
         email: "ana@example.com",
         document: "1",
         phone: "1",
-        password: Convert.ToBase64String(new byte[] { 1, 2, 3, 4 }),
+        password: "AQAAAA-stored-hash",
         role: "client",
         isActive: isActive);
 }

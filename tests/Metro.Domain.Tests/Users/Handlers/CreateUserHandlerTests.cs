@@ -24,7 +24,7 @@ public class CreateUserHandlerTests
 
     public CreateUserHandlerTests()
     {
-        _passwordService.HashPasswordWithSalt(Arg.Any<string>()).Returns(new byte[] { 1, 2, 3, 4 });
+        _passwordService.HashPassword(Arg.Any<string>()).Returns("hashed-password");
         _sut = new CreateUserHandler(_unityOfWork, _userRepository, _userQueryRepository, _passwordService);
     }
 

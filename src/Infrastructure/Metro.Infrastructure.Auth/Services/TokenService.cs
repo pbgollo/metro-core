@@ -23,6 +23,10 @@ namespace Metro.Infrastructure.Auth.Services
 
             var jwtKey = _configuration["Authentication:JWT:Key"]
                 ?? throw new InvalidOperationException("Authentication:JWT:Key is not configured.");
+            var issuer = _configuration["Authentication:JWT:Issuer"]
+                ?? throw new InvalidOperationException("Authentication:JWT:Issuer is not configured.");
+            var audience = _configuration["Authentication:JWT:Audience"]
+                ?? throw new InvalidOperationException("Authentication:JWT:Audience is not configured.");
             var key = Encoding.ASCII.GetBytes(jwtKey);
             var expiresInMinutes = GetAccessTokenExpiresInMinutes();
 
@@ -34,6 +38,8 @@ namespace Metro.Infrastructure.Auth.Services
                     new Claim(ClaimTypes.Name, user.Id.ToString()),
                     new Claim(ClaimTypes.Role, user.Role)
                 ]),
+                Issuer = issuer,
+                Audience = audience,
                 Expires = DateTime.UtcNow.AddMinutes(expiresInMinutes),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
             });

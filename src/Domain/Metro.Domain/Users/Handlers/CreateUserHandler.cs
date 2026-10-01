@@ -42,7 +42,7 @@ namespace Metro.Domain.Users.Handlers
                 return ApiResult<CreatedId>.BadRequest(PasswordPolicy.RequirementsMessage);
             }
 
-            var hashedPassword = _passwordService.HashPasswordWithSalt(request.Password);
+            var hashedPassword = _passwordService.HashPassword(request.Password);
             var role = request.Role is "master" or "client" ? request.Role : "client";
 
             var entity = new Entities.User(
@@ -50,7 +50,7 @@ namespace Metro.Domain.Users.Handlers
                 email: request.Email,
                 document: request.Document,
                 phone: request.Phone,
-                password: Convert.ToBase64String(hashedPassword),
+                password: hashedPassword,
                 role: role,
                 isActive: true
             );

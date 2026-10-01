@@ -77,7 +77,7 @@ namespace Metro.Domain.Users.Authentication.Handlers
                 return invalid;
             }
 
-            var hashedPassword = Convert.ToBase64String(_passwordService.HashPasswordWithSalt(request.NewPassword));
+            var hashedPassword = _passwordService.HashPassword(request.NewPassword);
 
             await _unityOfWork.BeginAsync(cancellationToken);
             try

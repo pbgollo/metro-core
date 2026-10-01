@@ -39,6 +39,10 @@ builder.Services.AddAuthentication(options =>
             && developerEnvironments;
         var jwtKey = configuration["Authentication:JWT:Key"]
             ?? throw new InvalidOperationException("Authentication:JWT:Key is not configured.");
+        var issuer = configuration["Authentication:JWT:Issuer"]
+            ?? throw new InvalidOperationException("Authentication:JWT:Issuer is not configured.");
+        var audience = configuration["Authentication:JWT:Audience"]
+            ?? throw new InvalidOperationException("Authentication:JWT:Audience is not configured.");
 
         options.RequireHttpsMetadata = !isDeveloperEnvironment;
         options.SaveToken = true;
@@ -46,8 +50,10 @@ builder.Services.AddAuthentication(options =>
         {
             ValidateIssuerSigningKey = true,
             IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(jwtKey)),
-            ValidateIssuer = false,
-            ValidateAudience = false,
+            ValidateIssuer = true,
+            ValidIssuer = issuer,
+            ValidateAudience = true,
+            ValidAudience = audience,
             ValidateLifetime = true,
             ClockSkew = TimeSpan.FromMinutes(1)
         };
@@ -176,7 +182,7 @@ using (var scope = app.Services.CreateScope())
     context.MigrateDatabase();
 
     var passwordService = scope.ServiceProvider.GetRequiredService<IPasswordService>();
-    var hashedPassword = Convert.ToBase64String(passwordService.HashPasswordWithSalt("131102"));
+    var hashedPassword = passwordService.HashPassword("131102");
     context.SeedMasterUser(hashedPassword);
 }
 

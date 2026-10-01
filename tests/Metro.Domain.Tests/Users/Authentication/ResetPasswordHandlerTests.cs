@@ -53,7 +53,7 @@ public class ResetPasswordHandlerTests
         _userRepository.GetEmail(user.Email).Returns(user);
         _passwordRecoveryCodeRepository.GetActiveByUserId(user.Id).Returns(recovery);
         _passwordService.HashCode("123456").Returns("hash");
-        _passwordService.HashPasswordWithSalt("NovaSenha1").Returns(new byte[] { 9, 9, 9 });
+        _passwordService.HashPassword("NovaSenha1").Returns("hashed-password");
 
         var result = await _sut.Handle(new ResetPasswordCommand
         {

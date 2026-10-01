@@ -50,8 +50,8 @@ namespace Metro.Domain.Users.Handlers
                     return ApiResult<object?>.BadRequest(PasswordPolicy.RequirementsMessage);
                 }
 
-                var hashedPassword = _passwordService.HashPasswordWithSalt(request.Password);
-                entity.UpdatePassword(Convert.ToBase64String(hashedPassword));
+                var hashedPassword = _passwordService.HashPassword(request.Password);
+                entity.UpdatePassword(hashedPassword);
             }
 
             await _unityOfWork.BeginAsync(cancellationToken);

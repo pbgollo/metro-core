@@ -54,6 +54,8 @@
 #             },
 #             "Authentication": {
 #                 "JWT": {
+#                     "Issuer": "metro-core",
+#                     "Audience": "metro-core-api",
 #                     "AccessTokenExpiresInMinutes": 60,
 #                     "RefreshTokenExpiresInDays": 7,
 #                     "Key": "${{ secrets.JWT_KEY }}"

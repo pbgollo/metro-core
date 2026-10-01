@@ -1,5 +1,6 @@
 using System.Security.Cryptography;
 using System.Text;
+using Microsoft.AspNetCore.Identity;
 using Metro.Domain.Users.Authentication.Services;
 
 namespace Metro.Infrastructure.Auth.Services
@@ -7,19 +8,23 @@ namespace Metro.Infrastructure.Auth.Services
     public class PasswordService : IPasswordService
     {
         private const string PasswordChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+        private readonly PasswordHasher<object> _passwordHasher = new();
 
-        public byte[] GenerateSaltedHash(string value, byte[] salt)
+        public string HashPassword(string password)
         {
-            using var hmac = new HMACSHA256(salt);
-            return hmac.ComputeHash(Encoding.UTF8.GetBytes(value));
+            ArgumentException.ThrowIfNullOrWhiteSpace(password);
+            return _passwordHasher.HashPassword(null!, password);
         }
 
-        public bool ConfirmPassword(byte[] passwordBase, string passwordInput)
+        public bool ConfirmPassword(string passwordHash, string passwordInput)
         {
-            var salt = passwordBase.Take(16).ToArray();
-            var hashInput = GenerateSaltedHash(passwordInput, salt);
-            var storedHash = passwordBase.Skip(16).ToArray();
-            return CryptographicOperations.FixedTimeEquals(storedHash, hashInput);
+            if (string.IsNullOrWhiteSpace(passwordHash) || string.IsNullOrWhiteSpace(passwordInput))
+            {
+                return false;
+            }
+
+            var result = _passwordHasher.VerifyHashedPassword(null!, passwordHash, passwordInput);
+            return result is PasswordVerificationResult.Success or PasswordVerificationResult.SuccessRehashNeeded;
         }
 
         public string GenerateRandomPassword(int length)
@@ -59,20 +64,6 @@ namespace Metro.Infrastructure.Auth.Services
             ArgumentException.ThrowIfNullOrWhiteSpace(code);
             var hash = SHA256.HashData(Encoding.UTF8.GetBytes(code));
             return Convert.ToHexString(hash);
-        }
-
-        public byte[] HashPasswordWithSalt(string password)
-        {
-            var salt = new byte[16];
-            RandomNumberGenerator.Fill(salt);
-
-            var hash = GenerateSaltedHash(password, salt);
-
-            var saltedHash = new byte[salt.Length + hash.Length];
-            Buffer.BlockCopy(salt, 0, saltedHash, 0, salt.Length);
-            Buffer.BlockCopy(hash, 0, saltedHash, salt.Length, hash.Length);
-
-            return saltedHash;
         }
     }
 }

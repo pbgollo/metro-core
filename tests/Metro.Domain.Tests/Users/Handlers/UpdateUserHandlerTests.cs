@@ -20,7 +20,7 @@ public class UpdateUserHandlerTests
 
     public UpdateUserHandlerTests()
     {
-        _passwordService.HashPasswordWithSalt(Arg.Any<string>()).Returns(new byte[] { 9, 8, 7, 6 });
+        _passwordService.HashPassword(Arg.Any<string>()).Returns("hashed-password");
         _sut = new UpdateUserHandler(_unityOfWork, _userRepository, _passwordService);
     }
 
@@ -67,9 +67,9 @@ public class UpdateUserHandlerTests
 
         await _sut.Handle(command, CancellationToken.None);
 
-        _passwordService.Received(1).HashPasswordWithSalt("NewPass12");
+        _passwordService.Received(1).HashPassword("NewPass12");
         user.Password.ShouldNotBe(originalPassword);
-        user.Password.ShouldBe(Convert.ToBase64String(new byte[] { 9, 8, 7, 6 }));
+        user.Password.ShouldBe("hashed-password");
     }
 
     [Fact]
@@ -81,7 +81,7 @@ public class UpdateUserHandlerTests
 
         await _sut.Handle(command, CancellationToken.None);
 
-        _passwordService.DidNotReceive().HashPasswordWithSalt(Arg.Any<string>());
+        _passwordService.DidNotReceive().HashPassword(Arg.Any<string>());
     }
 
     [Fact]
