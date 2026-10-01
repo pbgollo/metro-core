@@ -45,10 +45,18 @@ namespace Metro.Domain.Users.Handlers
                 password: Convert.ToBase64String(hashedPassword),
                 role: role
             );
-            await _userRepository.Create(entity);
-            await _unityOfWork.Commit();
-
-            return CommandResult.Created();
+            await _unityOfWork.BeginAsync(cancellationToken);
+            try
+            {
+                await _userRepository.Create(entity);
+                await _unityOfWork.CommitAsync(cancellationToken);
+                return CommandResult.Created(entity.Id);
+            }
+            catch
+            {
+                await _unityOfWork.RollbackAsync(cancellationToken);
+                throw;
+            }
         }
     }
 }

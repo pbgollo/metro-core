@@ -27,10 +27,18 @@ namespace Metro.Domain.Users.Handlers
                 return CommandResult.NotFound();
             }
 
-            await _userRepository.Delete(entity);
-            await _unityOfWork.Commit();
-
-            return CommandResult.OK();
+            await _unityOfWork.BeginAsync(cancellationToken);
+            try
+            {
+                await _userRepository.Delete(entity);
+                await _unityOfWork.CommitAsync(cancellationToken);
+                return CommandResult.OK();
+            }
+            catch
+            {
+                await _unityOfWork.RollbackAsync(cancellationToken);
+                throw;
+            }
         }
     }
 }
