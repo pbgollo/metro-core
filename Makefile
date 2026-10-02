@@ -1,4 +1,4 @@
-.PHONY: watch run test build clean migration db-update
+.PHONY: watch run test build clean migration db-update docker-up docker-down docker-logs
 
 APP_PROJECT=src/Application/Metro.Application/Metro.Application.csproj
 DB_PROJECT=src/Infrastructure/Metro.Infrastructure.PostgreSQL/Metro.Infrastructure.PostgreSQL.csproj
@@ -26,3 +26,12 @@ endif
 
 db-update:
 	dotnet ef database update -p $(DB_PROJECT) -s $(APP_PROJECT)
+
+docker-up:
+	docker compose up --build -d
+
+docker-down:
+	docker compose down
+
+docker-logs:
+	docker compose logs -f api

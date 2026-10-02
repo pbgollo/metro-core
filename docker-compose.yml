@@ -1,0 +1,48 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: metro-postgres
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-metro}
+      POSTGRES_USER: ${POSTGRES_USER:-metro}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-metro}
+    ports:
+      - "${POSTGRES_HOST_PORT:-5434}:5432"
+    volumes:
+      - metro_pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-metro} -d ${POSTGRES_DB:-metro}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  api:
+    image: metro-core:local
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: metro-api
+    depends_on:
+      postgres:
+        condition: service_healthy
+    ports:
+      - "${API_HOST_PORT:-8080}:8080"
+    environment:
+      ASPNETCORE_ENVIRONMENT: ${ASPNETCORE_ENVIRONMENT:-Production}
+      ASPNETCORE_URLS: http://+:8080
+      DeveloperEnvironments: ${DEVELOPER_ENVIRONMENTS:-true}
+      PostgreSQL__Connection: Host=postgres;Port=5432;Database=${POSTGRES_DB:-metro};Username=${POSTGRES_USER:-metro};Password=${POSTGRES_PASSWORD:-metro}
+      Authentication__JWT__Issuer: ${JWT_ISSUER:-metro-core}
+      Authentication__JWT__Audience: ${JWT_AUDIENCE:-metro-core-api}
+      Authentication__JWT__Key: ${JWT_KEY:?JWT_KEY is required}
+      Authentication__JWT__AccessTokenExpiresInMinutes: ${JWT_ACCESS_MINUTES:-60}
+      Authentication__JWT__RefreshTokenExpiresInDays: ${JWT_REFRESH_DAYS:-7}
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://127.0.0.1:8080/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+
+volumes:
+  metro_pgdata:

@@ -59,5 +59,8 @@ make clean                          # Limpa bin/ e obj/
 make test                           # Roda os testes unitários
 make migration name=NomeDaMigration # Cria uma migration
 make db-update                      # Aplica migrations no banco
+make docker-up                      # Sobe API + Postgres no Docker
+make docker-down                    # Para os containers
+make docker-logs                    # Segue os logs da API
 ```
 

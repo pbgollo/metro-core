@@ -1,0 +1,15 @@
+**/.git
+**/.vs
+**/.idea
+**/bin
+**/obj
+**/node_modules
+**/.DS_Store
+**/appsettings.Development.json
+**/appsettings.*.local.json
+**/.env
+**/Public/Storage/**
+!**/Public/Storage/.gitkeep
+**/agent-transcripts
+**/*.md
+!README.md

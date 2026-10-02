@@ -186,7 +186,10 @@ using (var scope = app.Services.CreateScope())
     context.SeedMasterUser(hashedPassword);
 }
 
-if (app.Environment.IsDevelopment())
+var enableSwagger = app.Environment.IsDevelopment()
+    || (bool.TryParse(configuration["DeveloperEnvironments"], out var developerEnvironments) && developerEnvironments);
+
+if (enableSwagger)
 {
     app.UseSwagger();
     app.UseSwaggerUI(options =>
