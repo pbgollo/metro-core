@@ -1,7 +1,7 @@
 using System.Security.Cryptography;
 using System.Text;
 using Microsoft.AspNetCore.Identity;
-using Metro.Domain.Users.Authentication.Services;
+using Metro.Domain.Auth.Services;
 
 namespace Metro.Infrastructure.Auth.Services
 {

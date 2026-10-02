@@ -1,15 +1,16 @@
-.PHONY: watch run test build clean migration db-update docker-up docker-down docker-logs
-
-APP_PROJECT=src/Application/Metro.Application/Metro.Application.csproj
+APP_PROJECT=src/Presentation/Metro.Api/Metro.Api.csproj
 DB_PROJECT=src/Infrastructure/Metro.Infrastructure.PostgreSQL/Metro.Infrastructure.PostgreSQL.csproj
 
+.PHONY: watch run test build clean migration db-update docker-up docker-down docker-logs
+
 watch:
-	cd src/Application/Metro.Application && dotnet watch run
+	cd src/Presentation/Metro.Api && dotnet watch run
 
 run:
 	dotnet run --project $(APP_PROJECT)
 
 test:
+	dotnet test tests/Metro.Application.Tests/Metro.Application.Tests.csproj
 	dotnet test tests/Metro.Domain.Tests/Metro.Domain.Tests.csproj
 
 build:

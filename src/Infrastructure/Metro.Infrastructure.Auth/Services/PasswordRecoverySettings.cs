@@ -1,4 +1,4 @@
-using Metro.Domain.Users.Authentication.Services;
+using Metro.Domain.Auth.Services;
 using Microsoft.Extensions.Configuration;
 
 namespace Metro.Infrastructure.Auth.Services

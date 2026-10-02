@@ -2,7 +2,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Configuration;
 using Metro.Infrastructure.PostgreSQL.Dapper.Sessions;
 using Metro.Infrastructure.PostgreSQL.Dapper.Repositories;
-using Metro.Domain.Users.Repositories;
+using Metro.Application.Users.Repositories;
 
 namespace Metro.Infrastructure.PostgreSQL.Dapper.Extensions
 {

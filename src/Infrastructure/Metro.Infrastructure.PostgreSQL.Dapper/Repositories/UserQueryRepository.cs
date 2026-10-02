@@ -1,6 +1,6 @@
 using Dapper;
-using Metro.Domain.Users.Repositories;
-using Metro.Domain.Users.ViewModel;
+using Metro.Application.Users.Repositories;
+using Metro.Application.Users.ViewModels;
 using Metro.Infrastructure.PostgreSQL.Dapper.Sessions;
 
 namespace Metro.Infrastructure.PostgreSQL.Dapper.Repositories

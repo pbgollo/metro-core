@@ -4,14 +4,16 @@ Projeto de API .NET 10 em Clean Architecture.
 
 ## Arquitetura
 
-A solução segue Clean Architecture com CQRS (MediatR). A regra de dependência é **de fora para dentro**: Application e Infrastructure dependem do Domain; o Domain não conhece frameworks nem banco.
+A solução segue Clean Architecture com CQRS (MediatR). A regra de dependência é **de fora para dentro**: Presentation e Infrastructure dependem de Application/Domain; o Domain não conhece frameworks nem banco.
 
 ```
 src/
-├── Application/          # Host HTTP (controllers, DI, pipeline)
+├── Presentation/         # Host HTTP (controllers, DI, pipeline)
+│   └── Metro.Api
+├── Application/          # Use cases (commands, queries, handlers, view models)
 │   └── Metro.Application
 ├── Domain/               # Regras de negócio e contratos
-│   ├── Metro.Domain      # Entidades, commands, queries, handlers, interfaces
+│   ├── Metro.Domain      # Entidades, interfaces de repositório/serviços
 │   └── Metro.Shared      # Abstrações compartilhadas (Entity, ApiResult, UoW…)
 └── Infrastructure/       # Implementações técnicas
     ├── Metro.Infrastructure.PostgreSQL        # EF Core (writes + migrations)
@@ -21,29 +23,27 @@ src/
     └── Metro.Infrastructure.File              # Storage local de arquivos
 
 tests/
-└── Metro.Domain.Tests    # Testes unitários dos handlers (xUnit + NSubstitute)
+├── Metro.Application.Tests  # Testes unitários dos handlers
+└── Metro.Domain.Tests       # Testes de regras de domínio
 ```
-
-
 
 ### Fluxo de uma request
 
-1. Controller recebe HTTP e monta um `Command` ou `Query`.
-2. MediatR despacha para o handler correspondente no Domain.
-3. Handler usa repositórios/serviços (interfaces) e retorna `ApiResult<T>`.
+1. Controller (Presentation) recebe HTTP e monta um `Command` ou `Query`.
+2. MediatR despacha para o handler correspondente na Application.
+3. Handler usa repositórios/serviços (interfaces do Domain) e retorna `ApiResult<T>`.
 4. `ApiController.FromResult` mapeia o status HTTP.
 
 **Writes** (create/update/delete) passam pelo EF Core + Unit of Work.  
 **Reads** (get/list) usam Dapper via query repositories.
 
-
-
 ### Como adicionar um novo módulo
 
-1. Criar pasta em `Metro.Domain` (entidade, commands/queries, handlers, interfaces).
-2. Implementar repositórios/mappings na Infrastructure.
-3. Expor controller em `Metro.Application/Controllers` no padrão REST (`/{id}` na rota).
-4. Se precisar de tabela nova: gerar migration (seção Comandos).
+1. Criar entidades/interfaces em `Metro.Domain`.
+2. Criar commands/queries/handlers/view models em `Metro.Application`.
+3. Implementar repositórios/mappings na Infrastructure.
+4. Expor controller em `Metro.Api/Controllers` no padrão REST (`/{id}` na rota).
+5. Se precisar de tabela nova: gerar migration (seção Comandos).
 
 ---
 
@@ -63,4 +63,3 @@ make docker-up                      # Sobe API + Postgres no Docker
 make docker-down                    # Para os containers
 make docker-logs                    # Segue os logs da API
 ```
-

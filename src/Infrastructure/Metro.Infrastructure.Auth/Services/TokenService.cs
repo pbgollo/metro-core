@@ -4,7 +4,8 @@ using System.Security.Cryptography;
 using System.Text;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
-using Metro.Domain.Users.Authentication.Services;
+using Metro.Domain.Auth.Services;
+using Metro.Domain.Users.Entities;
 
 namespace Metro.Infrastructure.Auth.Services
 {
@@ -17,7 +18,7 @@ namespace Metro.Infrastructure.Auth.Services
             _configuration = configuration;
         }
 
-        public string GenerateAccessToken(Domain.Users.Entities.User user)
+        public string GenerateAccessToken(User user)
         {
             ArgumentNullException.ThrowIfNull(user);
 

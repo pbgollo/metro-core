@@ -1,17 +1,15 @@
-using System.Net;
-
 namespace Metro.Shared.Results
 {
     public sealed class ApiResult<T>
     {
-        public HttpStatusCode StatusCode { get; init; }
+        public ResultStatus Status { get; init; }
         public string Message { get; init; } = string.Empty;
         public T? Data { get; init; }
 
         public static ApiResult<T> Ok(T? data = default, string message = "OK")
             => new()
             {
-                StatusCode = HttpStatusCode.OK,
+                Status = ResultStatus.Ok,
                 Message = message,
                 Data = data
             };
@@ -19,7 +17,7 @@ namespace Metro.Shared.Results
         public static ApiResult<T> Created(T data, string message = "Resource created successfully.")
             => new()
             {
-                StatusCode = HttpStatusCode.Created,
+                Status = ResultStatus.Created,
                 Message = message,
                 Data = data
             };
@@ -27,42 +25,42 @@ namespace Metro.Shared.Results
         public static ApiResult<T> NoContent(string message = "No content to return.")
             => new()
             {
-                StatusCode = HttpStatusCode.NoContent,
+                Status = ResultStatus.NoContent,
                 Message = message
             };
 
         public static ApiResult<T> BadRequest(string message = "Bad request.")
             => new()
             {
-                StatusCode = HttpStatusCode.BadRequest,
+                Status = ResultStatus.BadRequest,
                 Message = message
             };
 
         public static ApiResult<T> NotFound(string message = "Resource not found.")
             => new()
             {
-                StatusCode = HttpStatusCode.NotFound,
+                Status = ResultStatus.NotFound,
                 Message = message
             };
 
         public static ApiResult<T> Conflict(string message = "Resource conflict.")
             => new()
             {
-                StatusCode = HttpStatusCode.Conflict,
+                Status = ResultStatus.Conflict,
                 Message = message
             };
 
         public static ApiResult<T> Unauthorized(string message = "Unauthorized")
             => new()
             {
-                StatusCode = HttpStatusCode.Unauthorized,
+                Status = ResultStatus.Unauthorized,
                 Message = message
             };
 
-        public static ApiResult<T> InternalServerError(string message = "An internal server error occurred.")
+        public static ApiResult<T> InternalError(string message = "An internal server error occurred.")
             => new()
             {
-                StatusCode = HttpStatusCode.InternalServerError,
+                Status = ResultStatus.InternalError,
                 Message = message
             };
     }

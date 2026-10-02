@@ -488,5 +488,5 @@ $RECYCLE.BIN/
 *.swp
 
 # Arquivos enviados para o storage local
-src/Application/Metro.Application/Public/Storage/**
-!src/Application/Metro.Application/Public/Storage/.gitkeep
+src/Presentation/Metro.Api/Public/Storage/**
+!src/Presentation/Metro.Api/Public/Storage/.gitkeep
