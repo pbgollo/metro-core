@@ -4,17 +4,17 @@ Projeto de API .NET 10 em Clean Architecture.
 
 ## Arquitetura
 
-A solução segue Clean Architecture com CQRS (MediatR). A regra de dependência é **de fora para dentro**: Presentation e Infrastructure dependem de Application/Domain; o Domain não conhece frameworks nem banco.
+A solução segue Clean Architecture com CQRS (MediatR). A regra de dependência é **de fora para dentro**: Presentation e Infrastructure dependem de Application/Domain; o Domain não conhece frameworks nem banco. O MediatR fica só em `Metro.Application` e `Metro.Api`.
 
 ```
 src/
 ├── Presentation/         # Host HTTP (controllers, DI, pipeline)
 │   └── Metro.Api
-├── Application/          # Use cases (commands, queries, handlers, view models)
+├── Application/          # Use cases (commands, queries, handlers, ApiResult, MediatR)
 │   └── Metro.Application
 ├── Domain/               # Regras de negócio e contratos
 │   ├── Metro.Domain      # Entidades, interfaces de repositório/serviços
-│   └── Metro.Shared      # Abstrações compartilhadas (Entity, ApiResult, UoW…)
+│   └── Metro.Shared      # Abstrações compartilhadas (Entity, UoW…)
 └── Infrastructure/       # Implementações técnicas
     ├── Metro.Infrastructure.PostgreSQL        # EF Core (writes + migrations)
     ├── Metro.Infrastructure.PostgreSQL.Dapper # Dapper (reads)

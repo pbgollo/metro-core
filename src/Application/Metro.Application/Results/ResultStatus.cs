@@ -1,4 +1,4 @@
-namespace Metro.Shared.Results
+namespace Metro.Application.Results
 {
     public enum ResultStatus
     {

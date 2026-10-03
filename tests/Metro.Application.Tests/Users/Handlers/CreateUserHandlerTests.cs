@@ -6,7 +6,7 @@ using Metro.Domain.Users.Repositories;
 using Metro.Application.Users.Repositories;
 using Metro.Application.Users.ViewModels;
 using Metro.Shared.Data;
-using Metro.Shared.Results;
+using Metro.Application.Results;
 using NSubstitute;
 using NSubstitute.ExceptionExtensions;
 using Shouldly;

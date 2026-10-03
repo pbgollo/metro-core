@@ -5,8 +5,8 @@ using Metro.Domain.Users.Repositories;
 using Metro.Application.Users.Repositories;
 using Metro.Application.Users.ViewModels;
 using Metro.Shared.Data;
-using Metro.Shared.Handlers;
-using Metro.Shared.Results;
+using Metro.Application.Messaging;
+using Metro.Application.Results;
 
 namespace Metro.Application.Users.Handlers
 {

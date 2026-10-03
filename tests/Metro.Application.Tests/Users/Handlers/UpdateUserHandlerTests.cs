@@ -1,4 +1,4 @@
-using Metro.Shared.Results;
+using Metro.Application.Results;
 using Metro.Domain.Auth.Services;
 using Metro.Application.Users.Commands;
 using Metro.Domain.Users.Entities;

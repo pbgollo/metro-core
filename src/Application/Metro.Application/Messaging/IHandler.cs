@@ -1,10 +1,10 @@
 using MediatR;
-using Metro.Shared.Results;
+using Metro.Application.Results;
 
-namespace Metro.Shared.Handlers
+namespace Metro.Application.Messaging
 {
     public interface IHandler<TCommand, TResponse> : IRequestHandler<TCommand, ApiResult<TResponse>>
-        where TCommand : IRequest<ApiResult<TResponse>>
+        where TCommand : ICommand<ApiResult<TResponse>>
     {
     }
 }

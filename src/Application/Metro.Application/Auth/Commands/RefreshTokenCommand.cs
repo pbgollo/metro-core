@@ -1,6 +1,6 @@
 using Metro.Application.Auth.ViewModels;
-using Metro.Shared.Commands;
-using Metro.Shared.Results;
+using Metro.Application.Messaging;
+using Metro.Application.Results;
 
 namespace Metro.Application.Auth.Commands
 {

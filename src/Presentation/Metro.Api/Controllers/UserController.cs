@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.RateLimiting;
 using Metro.Application.Users.Commands;
 using Metro.Application.Users.Queries;
 using Metro.Application.Users.ViewModels;
-using Metro.Shared.Results;
+using Metro.Application.Results;
 
 namespace Metro.Api.Controllers
 {

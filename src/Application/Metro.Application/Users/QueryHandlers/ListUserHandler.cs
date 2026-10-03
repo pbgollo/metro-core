@@ -1,8 +1,8 @@
 using Metro.Application.Users.Queries;
 using Metro.Application.Users.Repositories;
 using Metro.Application.Users.ViewModels;
-using Metro.Shared.QueryHandlers;
-using Metro.Shared.Results;
+using Metro.Application.Messaging;
+using Metro.Application.Results;
 
 namespace Metro.Application.Users.QueryHandlers
 {

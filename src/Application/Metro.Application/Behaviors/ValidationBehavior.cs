@@ -1,7 +1,7 @@
 using System.Reflection;
 using FluentValidation;
 using MediatR;
-using Metro.Shared.Results;
+using Metro.Application.Results;
 
 namespace Metro.Application.Behaviors
 {

@@ -1,9 +1,9 @@
 using MediatR;
 
-namespace Metro.Shared.QueryHandlers
+namespace Metro.Application.Messaging
 {
     public interface IQueryHandler<TQuery, TResult> : IRequestHandler<TQuery, TResult>
-        where TQuery : IRequest<TResult>
+        where TQuery : IQuery<TResult>
     {
     }
 }

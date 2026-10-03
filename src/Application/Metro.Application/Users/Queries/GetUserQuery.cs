@@ -1,6 +1,6 @@
 using Metro.Application.Users.ViewModels;
-using Metro.Shared.Queries;
-using Metro.Shared.Results;
+using Metro.Application.Messaging;
+using Metro.Application.Results;
 
 namespace Metro.Application.Users.Queries
 {

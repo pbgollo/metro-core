@@ -1,5 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
-using Metro.Shared.Results;
+using Metro.Application.Results;
 
 namespace Metro.Api.Controllers
 {
