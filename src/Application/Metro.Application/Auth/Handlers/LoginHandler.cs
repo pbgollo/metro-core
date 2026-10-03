@@ -35,19 +35,14 @@ namespace Metro.Application.Auth.Handlers
         {
             var unauthorized = ApiResult<LoginViewModel>.Unauthorized();
 
-            if (string.IsNullOrWhiteSpace(request.Email) || string.IsNullOrWhiteSpace(request.Password))
-            {
-                return unauthorized;
-            }
-
-            var user = await _userRepository.GetEmail(request.Email);
+            var user = await _userRepository.GetEmail(request.Email!);
 
             if (user is null)
             {
                 return unauthorized;
             }
 
-            if (!_passwordService.ConfirmPassword(user.Password, request.Password) || !user.IsActive)
+            if (!_passwordService.ConfirmPassword(user.Password, request.Password!) || !user.IsActive)
             {
                 return unauthorized;
             }

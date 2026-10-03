@@ -28,18 +28,6 @@ public class RefreshTokenHandlerTests
     }
 
     [Fact]
-    public async Task Handle_WhenRefreshTokenMissing_ReturnsUnauthorized()
-    {
-        var result = await _sut.Handle(new RefreshTokenCommand
-        {
-            RefreshToken = " "
-        }, CancellationToken.None);
-
-        result.Status.ShouldBe(ResultStatus.Unauthorized);
-        await _unityOfWork.DidNotReceive().BeginAsync(Arg.Any<CancellationToken>());
-    }
-
-    [Fact]
     public async Task Handle_WhenRefreshTokenNotFound_ReturnsUnauthorized()
     {
         _tokenService.HashRefreshToken("old-refresh").Returns("hash");

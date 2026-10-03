@@ -1,5 +1,6 @@
 using Microsoft.OpenApi;
 using Metro.Application.Users.Commands;
+using Metro.Application;
 using Metro.Infrastructure.PostgreSQL.Extensions;
 using Metro.Infrastructure.PostgreSQL.Dapper.Extensions;
 using Microsoft.Extensions.FileProviders;
@@ -135,6 +136,7 @@ builder.Services.AddRateLimiter(options =>
             }));
 });
 
+builder.Services.AddApplication();
 builder.Services.AddMediatR(cfg =>
 {
     cfg.RegisterServicesFromAssembly(typeof(CreateUserCommand).Assembly);

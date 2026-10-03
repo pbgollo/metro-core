@@ -30,12 +30,7 @@ namespace Metro.Application.Auth.Handlers
         {
             var invalid = ApiResult<object>.Unauthorized("Código inválido ou expirado.");
 
-            if (string.IsNullOrWhiteSpace(request.Email) || string.IsNullOrWhiteSpace(request.Code))
-            {
-                return invalid;
-            }
-
-            var user = await _userRepository.GetEmail(request.Email.Trim());
+            var user = await _userRepository.GetEmail(request.Email!.Trim());
             if (user is null || !user.IsActive)
             {
                 return invalid;
@@ -47,7 +42,7 @@ namespace Metro.Application.Auth.Handlers
                 return invalid;
             }
 
-            var codeHash = _passwordService.HashCode(request.Code.Trim());
+            var codeHash = _passwordService.HashCode(request.Code!.Trim());
             if (!string.Equals(recovery.CodeHash, codeHash, StringComparison.Ordinal))
             {
                 await _unityOfWork.BeginAsync(cancellationToken);

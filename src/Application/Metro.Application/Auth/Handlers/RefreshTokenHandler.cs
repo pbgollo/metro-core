@@ -32,12 +32,7 @@ namespace Metro.Application.Auth.Handlers
         {
             var unauthorized = ApiResult<LoginViewModel>.Unauthorized();
 
-            if (string.IsNullOrWhiteSpace(request.RefreshToken))
-            {
-                return unauthorized;
-            }
-
-            var tokenHash = _tokenService.HashRefreshToken(request.RefreshToken);
+            var tokenHash = _tokenService.HashRefreshToken(request.RefreshToken!);
             var existingToken = await _refreshTokenRepository.GetByTokenHash(tokenHash);
 
             if (existingToken is null || !existingToken.IsActive)

@@ -38,12 +38,7 @@ namespace Metro.Application.Auth.Handlers
         {
             var success = ApiResult<object>.Ok(message: "Se o e-mail estiver cadastrado, você receberá um código de recuperação.");
 
-            if (string.IsNullOrWhiteSpace(request.Email))
-            {
-                return success;
-            }
-
-            var user = await _userRepository.GetEmail(request.Email.Trim());
+            var user = await _userRepository.GetEmail(request.Email!.Trim());
             if (user is null || !user.IsActive)
             {
                 return success;

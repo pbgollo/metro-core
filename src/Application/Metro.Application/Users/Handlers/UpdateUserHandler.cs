@@ -1,4 +1,3 @@
-using Metro.Domain.Auth;
 using Metro.Domain.Auth.Services;
 using Metro.Application.Users.Commands;
 using Metro.Domain.Users.Repositories;
@@ -45,11 +44,6 @@ namespace Metro.Application.Users.Handlers
 
             if (!string.IsNullOrWhiteSpace(request.Password))
             {
-                if (!PasswordPolicy.IsValid(request.Password))
-                {
-                    return ApiResult<object?>.BadRequest(PasswordPolicy.RequirementsMessage);
-                }
-
                 var hashedPassword = _passwordService.HashPassword(request.Password);
                 entity.UpdatePassword(hashedPassword);
             }

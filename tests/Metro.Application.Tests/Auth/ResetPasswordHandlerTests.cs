@@ -1,5 +1,4 @@
 using Metro.Shared.Results;
-using Metro.Domain.Auth;
 using Metro.Application.Auth.Commands;
 using Metro.Application.Auth.Handlers;
 using Metro.Domain.Auth.Services;
@@ -28,21 +27,6 @@ public class ResetPasswordHandlerTests
             _refreshTokenRepository,
             _passwordService,
             _unityOfWork);
-    }
-
-    [Fact]
-    public async Task Handle_WhenNewPasswordInvalid_ReturnsBadRequest()
-    {
-        var result = await _sut.Handle(new ResetPasswordCommand
-        {
-            Email = "ana@example.com",
-            Code = "123456",
-            NewPassword = "123"
-        }, CancellationToken.None);
-
-        result.Status.ShouldBe(ResultStatus.BadRequest);
-        result.Message.ShouldBe(PasswordPolicy.RequirementsMessage);
-        await _unityOfWork.DidNotReceive().BeginAsync(Arg.Any<CancellationToken>());
     }
 
     [Fact]

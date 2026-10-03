@@ -27,6 +27,8 @@ tests/
 └── Metro.Domain.Tests       # Testes de regras de domínio
 ```
 
+
+
 ### Fluxo de uma request
 
 1. Controller (Presentation) recebe HTTP e monta um `Command` ou `Query`.
@@ -37,13 +39,15 @@ tests/
 **Writes** (create/update/delete) passam pelo EF Core + Unit of Work.  
 **Reads** (get/list) usam Dapper via query repositories.
 
+
 ### Como adicionar um novo módulo
 
 1. Criar entidades/interfaces em `Metro.Domain`.
 2. Criar commands/queries/handlers/view models em `Metro.Application`.
-3. Implementar repositórios/mappings na Infrastructure.
-4. Expor controller em `Metro.Api/Controllers` no padrão REST (`/{id}` na rota).
-5. Se precisar de tabela nova: gerar migration (seção Comandos).
+3. Criar validators FluentValidation do command/query (pipeline MediatR).
+4. Implementar repositórios/mappings na Infrastructure.
+5. Expor controller em `Metro.Api/Controllers` no padrão REST (`/{id}` na rota).
+6. Se precisar de tabela nova: gerar migration (seção Comandos).
 
 ---
 
@@ -63,3 +67,4 @@ make docker-up                      # Sobe API + Postgres no Docker
 make docker-down                    # Para os containers
 make docker-logs                    # Segue os logs da API
 ```
+

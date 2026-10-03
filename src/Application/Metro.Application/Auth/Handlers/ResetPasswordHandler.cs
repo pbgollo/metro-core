@@ -1,4 +1,3 @@
-using Metro.Domain.Auth;
 using Metro.Application.Auth.Commands;
 using Metro.Domain.Auth.Services;
 using Metro.Domain.Users.Repositories;
@@ -34,19 +33,7 @@ namespace Metro.Application.Auth.Handlers
         {
             var invalid = ApiResult<object>.Unauthorized("Código inválido ou expirado.");
 
-            if (string.IsNullOrWhiteSpace(request.Email)
-                || string.IsNullOrWhiteSpace(request.Code)
-                || string.IsNullOrWhiteSpace(request.NewPassword))
-            {
-                return invalid;
-            }
-
-            if (!PasswordPolicy.IsValid(request.NewPassword))
-            {
-                return ApiResult<object>.BadRequest(PasswordPolicy.RequirementsMessage);
-            }
-
-            var user = await _userRepository.GetEmail(request.Email.Trim());
+            var user = await _userRepository.GetEmail(request.Email!.Trim());
             if (user is null || !user.IsActive)
             {
                 return invalid;
@@ -58,7 +45,7 @@ namespace Metro.Application.Auth.Handlers
                 return invalid;
             }
 
-            var codeHash = _passwordService.HashCode(request.Code.Trim());
+            var codeHash = _passwordService.HashCode(request.Code!.Trim());
             if (!string.Equals(recovery.CodeHash, codeHash, StringComparison.Ordinal))
             {
                 await _unityOfWork.BeginAsync(cancellationToken);
@@ -77,7 +64,7 @@ namespace Metro.Application.Auth.Handlers
                 return invalid;
             }
 
-            var hashedPassword = _passwordService.HashPassword(request.NewPassword);
+            var hashedPassword = _passwordService.HashPassword(request.NewPassword!);
 
             await _unityOfWork.BeginAsync(cancellationToken);
             try

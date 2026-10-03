@@ -1,4 +1,3 @@
-using Metro.Domain.Auth;
 using Metro.Domain.Auth.Services;
 using Metro.Application.Users.Commands;
 using Metro.Domain.Users.Entities;
@@ -37,11 +36,6 @@ namespace Metro.Application.Users.Handlers
             if (userViewModel is not null)
             {
                 return ApiResult<CreatedId>.Conflict("O e-mail já está cadastrado.");
-            }
-
-            if (!PasswordPolicy.IsValid(request.Password))
-            {
-                return ApiResult<CreatedId>.BadRequest(PasswordPolicy.RequirementsMessage);
             }
 
             var hashedPassword = _passwordService.HashPassword(request.Password);
