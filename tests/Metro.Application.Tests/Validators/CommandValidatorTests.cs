@@ -26,6 +26,48 @@ public class CommandValidatorTests
             .WithErrorMessage(PasswordPolicy.RequirementsMessage);
     }
 
+    [Theory]
+    [InlineData("admin")]
+    [InlineData("")]
+    [InlineData("CLIENT")]
+    public void CreateUserCommand_WhenRoleInvalid_HasError(string role)
+    {
+        var validator = new CreateUserCommandValidator();
+        var result = validator.TestValidate(new Metro.Application.Users.Commands.CreateUserCommand
+        {
+            Name = "Ana",
+            Email = "ana@example.com",
+            Document = "123",
+            Phone = "1199",
+            Password = "Secret123!",
+            Role = role
+        });
+
+        result.ShouldHaveValidationErrorFor(command => command.Role)
+            .WithErrorMessage("O perfil deve ser master ou client.");
+    }
+
+    [Theory]
+    [InlineData("admin")]
+    [InlineData("")]
+    [InlineData("CLIENT")]
+    public void UpdateUserCommand_WhenRoleInvalid_HasError(string role)
+    {
+        var validator = new UpdateUserCommandValidator();
+        var result = validator.TestValidate(new Metro.Application.Users.Commands.UpdateUserCommand
+        {
+            Id = Guid.NewGuid(),
+            Name = "Ana",
+            Email = "ana@example.com",
+            Document = "123",
+            Phone = "1199",
+            Role = role
+        });
+
+        result.ShouldHaveValidationErrorFor(command => command.Role)
+            .WithErrorMessage("O perfil deve ser master ou client.");
+    }
+
     [Fact]
     public void CreateUserCommand_WhenValid_HasNoErrors()
     {

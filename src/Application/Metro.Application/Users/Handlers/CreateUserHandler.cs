@@ -39,7 +39,6 @@ namespace Metro.Application.Users.Handlers
             }
 
             var hashedPassword = _passwordService.HashPassword(request.Password);
-            var role = request.Role is "master" or "client" ? request.Role : "client";
 
             var entity = new User(
                 name: request.Name,
@@ -47,7 +46,7 @@ namespace Metro.Application.Users.Handlers
                 document: request.Document,
                 phone: request.Phone,
                 password: hashedPassword,
-                role: role,
+                role: request.Role,
                 isActive: true
             );
 

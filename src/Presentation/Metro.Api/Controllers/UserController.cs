@@ -59,10 +59,6 @@ namespace Metro.Api.Controllers
             {
                 command.Role = "client";
             }
-            else if (command.Role is not ("master" or "client"))
-            {
-                command.Role = "client";
-            }
 
             return FromResult(await _mediator.Send(command));
         }

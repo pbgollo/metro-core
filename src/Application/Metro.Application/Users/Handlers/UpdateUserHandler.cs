@@ -31,14 +31,12 @@ namespace Metro.Application.Users.Handlers
                 return ApiResult<object?>.NotFound();
             }
 
-            var role = request.Role is "master" or "client" ? request.Role : entity.Role;
-
             entity.Update(
                 name: request.Name,
                 email: request.Email,
                 document: request.Document,
                 phone: request.Phone,
-                role: role,
+                role: request.Role,
                 isActive: request.IsActive
             );
 

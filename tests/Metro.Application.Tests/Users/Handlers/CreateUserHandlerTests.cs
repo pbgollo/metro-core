@@ -79,25 +79,6 @@ public class CreateUserHandlerTests
         await _unityOfWork.DidNotReceive().RollbackAsync(Arg.Any<CancellationToken>());
     }
 
-    [Theory]
-    [InlineData("admin")]
-    [InlineData("")]
-    [InlineData("CLIENT")]
-    public async Task Handle_WhenRoleInvalid_DefaultsToClient(string role)
-    {
-        var command = CreateCommand(role: role);
-        _userQueryRepository.GetByEmail(command.Email).Returns((GetUserViewModel?)null);
-
-        User? created = null;
-        _userRepository
-            .When(x => x.Create(Arg.Any<User>()))
-            .Do(ci => created = ci.Arg<User>());
-
-        await _sut.Handle(command, CancellationToken.None);
-
-        created!.Role.ShouldBe("client");
-    }
-
     [Fact]
     public async Task Handle_WhenPersistFails_RollsBack_AndRethrows()
     {
