@@ -1,9 +1,9 @@
 using Metro.Application.Auth.Commands;
 using Metro.Domain.Auth.Services;
-using Metro.Domain.Users.Repositories;
 using Metro.Shared.Data;
 using Metro.Application.Messaging;
 using Metro.Application.Results;
+using Metro.Domain.Auth.Repositories;
 
 namespace Metro.Application.Auth.Handlers
 {

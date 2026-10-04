@@ -2,7 +2,9 @@ using Metro.Infrastructure.PostgreSQL.Contexts;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Metro.Domain.Users.Repositories;
+using Metro.Domain.Auth.Repositories;
 using Metro.Infrastructure.PostgreSQL.Repositories.User;
+using Metro.Infrastructure.PostgreSQL.Repositories.Auth;
 using Metro.Shared.Data;
 using Metro.Infrastructure.PostgreSQL.Data;
 

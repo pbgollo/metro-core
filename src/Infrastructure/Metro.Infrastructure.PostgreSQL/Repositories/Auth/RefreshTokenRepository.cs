@@ -1,9 +1,9 @@
 using Microsoft.EntityFrameworkCore;
-using Metro.Domain.Users.Entities;
-using Metro.Domain.Users.Repositories;
+using Metro.Domain.Auth.Entities;
+using Metro.Domain.Auth.Repositories;
 using Metro.Infrastructure.PostgreSQL.Contexts;
 
-namespace Metro.Infrastructure.PostgreSQL.Repositories.User
+namespace Metro.Infrastructure.PostgreSQL.Repositories.Auth
 {
     public class RefreshTokenRepository : IRefreshTokenRepository
     {

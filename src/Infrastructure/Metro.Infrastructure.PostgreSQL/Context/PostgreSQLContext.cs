@@ -1,6 +1,8 @@
 using Microsoft.EntityFrameworkCore;
 using Metro.Domain.Users.Entities;
+using Metro.Domain.Auth.Entities;
 using Metro.Infrastructure.PostgreSQL.Mappings.User;
+using Metro.Infrastructure.PostgreSQL.Mappings.Auth;
 using Metro.Shared.Entities;
 
 namespace Metro.Infrastructure.PostgreSQL.Contexts

@@ -1,6 +1,6 @@
 using Metro.Shared.Entities;
 
-namespace Metro.Domain.Users.Entities
+namespace Metro.Domain.Auth.Entities
 {
     public class PasswordRecoveryCode : Entity
     {

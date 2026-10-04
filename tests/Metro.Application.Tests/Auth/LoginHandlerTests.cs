@@ -2,11 +2,13 @@ using Metro.Application.Results;
 using Metro.Application.Auth.Handlers;
 using Metro.Application.Auth.Commands;
 using Metro.Domain.Auth.Services;
-using Metro.Domain.Users.Entities;
-using Metro.Domain.Users.Repositories;
 using Metro.Shared.Data;
 using NSubstitute;
 using Shouldly;
+using Metro.Domain.Auth.Repositories;
+using Metro.Domain.Users.Entities;
+using Metro.Domain.Users.Repositories;
+using Metro.Domain.Auth.Entities;
 
 namespace Metro.Application.Tests.Auth;
 

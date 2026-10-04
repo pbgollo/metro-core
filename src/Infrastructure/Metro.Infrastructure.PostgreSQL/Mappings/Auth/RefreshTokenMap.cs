@@ -1,7 +1,7 @@
 using Microsoft.EntityFrameworkCore;
-using Metro.Domain.Users.Entities;
+using Metro.Domain.Auth.Entities;
 
-namespace Metro.Infrastructure.PostgreSQL.Mappings.User
+namespace Metro.Infrastructure.PostgreSQL.Mappings.Auth
 {
     public class RefreshTokenMap : IEntityTypeConfiguration<RefreshToken>
     {

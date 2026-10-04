@@ -25,7 +25,7 @@ namespace Metro.Infrastructure.PostgreSQL.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("Metro.Domain.Users.Entities.PasswordRecoveryCode", b =>
+            modelBuilder.Entity("Metro.Domain.Auth.Entities.PasswordRecoveryCode", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -63,7 +63,7 @@ namespace Metro.Infrastructure.PostgreSQL.Migrations
                     b.ToTable("PasswordRecoveryCode", (string)null);
                 });
 
-            modelBuilder.Entity("Metro.Domain.Users.Entities.RefreshToken", b =>
+            modelBuilder.Entity("Metro.Domain.Auth.Entities.RefreshToken", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
