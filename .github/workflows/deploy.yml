@@ -1,3 +1,6 @@
+# Required secrets: DB_PASSWORD, EMAIL_PASSWORD, JWT_KEY, SSH_KEY
+# Required variables: DB_HOST, DB_PORT, DB_NAME, DB_USER, EMAIL_SENDER, EMAIL_HOST, EMAIL_PORT, SSH_USER, SSH_HOST, BACKEND_PATH
+
 # name: Deploy .NET
 
 # on:
@@ -28,14 +31,14 @@
 #         run: dotnet test --no-build --configuration Release --verbosity normal
 
 #       - name: Publicar aplicação
-#         run: dotnet publish src/Application/Metro.Application/Metro.Application.csproj -c Release -o out --no-build
+#         run: dotnet publish src/Presentation/Metro.Api/Metro.Api.csproj -c Release -o out --no-build
 
 #       - name: Criar appsettings.json
 #         run: |
 #           cat <<EOF > out/appsettings.json
 #           {
 #             "PostgreSQL": {
-#                 "Connection": "Host=${{ vars.DB_HOST }};Port=${{ vars.DB_PORT }};Database=${{ vars.DB_NAME }};Username=${{ vars.DB_USER }};Password=${{ secrets.DB_PASSWORD }};Include Error Detail=true"
+#                 "Connection": "Host=${{ vars.DB_HOST }};Port=${{ vars.DB_PORT }};Database=${{ vars.DB_NAME }};Username=${{ vars.DB_USER }};Password=${{ secrets.DB_PASSWORD }}"
 #             },
 #             "DeveloperEnvironments": false,
 #             "Logging": {
@@ -77,7 +80,7 @@
 #             },
 #             "PasswordRecovery": {
 #                 "CodeLength": 6,
-#                 "CodeExpiresInMinutes": 15,
+#                 "CodeExpiresInMinutes": 30,
 #                 "MaxAttempts": 5
 #             },
 #             "Storage": {
