@@ -1,7 +1,7 @@
 APP_PROJECT=src/Presentation/Metro.Api/Metro.Api.csproj
 DB_PROJECT=src/Infrastructure/Metro.Infrastructure.PostgreSQL/Metro.Infrastructure.PostgreSQL.csproj
 
-.PHONY: watch run test build clean migration db-update docker-up docker-down docker-logs
+.PHONY: watch run test build clean migration db-update docker-up docker-start docker-down docker-logs
 
 watch:
 	cd src/Presentation/Metro.Api && dotnet watch run
@@ -30,6 +30,9 @@ db-update:
 
 docker-up:
 	docker compose up --build -d
+
+docker-start:
+	docker compose start
 
 docker-down:
 	docker compose down
