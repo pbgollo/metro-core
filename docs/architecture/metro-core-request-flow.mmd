@@ -1,0 +1,54 @@
+%% metro-core — internal request flow (Clean Architecture + CQRS)
+
+flowchart TD
+    client[HTTP Client]
+
+    subgraph presentation_in["Presentation"]
+        direction TD
+        controller["Controller<br/>ASP.NET Core"]
+    end
+
+    subgraph application["Application"]
+        direction TD
+        mediatr["MediatR"]
+        validation["ValidationBehavior<br/>FluentValidation"]
+        handler["Handler<br/>Command / Query"]
+        mediatr --> validation --> handler
+    end
+
+    subgraph domain["Domain"]
+        direction TD
+        contracts["Interfaces<br/>Repositories / Services"]
+    end
+
+    subgraph infrastructure["Infrastructure"]
+        direction TD
+        ef["EF Core + UoW<br/>Writes"]
+        dapper["Dapper<br/>Reads"]
+        db[("PostgreSQL")]
+        ef --> db
+        dapper --> db
+    end
+
+    subgraph presentation_out["Presentation"]
+        direction TD
+        fromResult["FromResult<br/>ApiResult to HTTP"]
+    end
+
+    response[HTTP Response]
+
+    client -->|HTTP| controller
+    controller -->|Command / Query| mediatr
+    handler --> contracts
+    contracts -->|Write| ef
+    contracts -->|Read| dapper
+    handler -->|ApiResult| fromResult
+    fromResult -->|HTTP| response
+
+    classDef person fill:#08427b,color:#fff,stroke:#052e56
+    classDef container fill:#1168bd,color:#fff,stroke:#0b4884
+    classDef datastore fill:#438dd5,color:#fff,stroke:#2e6295
+
+    class client,response person
+    class controller,fromResult,mediatr,validation,handler,contracts,ef,dapper container
+    class db datastore

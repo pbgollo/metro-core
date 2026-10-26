@@ -1,17 +1,25 @@
 ---
-description: Especificação do MetroIsJustABus. Usar em requisitos, domínio (rede, horários, bilhetes, validações, ocupação, perturbações, notificações), arquitetura distribuída, testes, CI/CD e deployment.
+description: MetroIsJustABus specification. Use for requirements, domain (network, schedules, tickets, validations, occupancy, disruptions, notifications), distributed architecture, testing, CI/CD, and deployment.
 alwaysApply: false
 ---
 
-# Especificação do projeto
+# Project specification
 
-A especificação consultável é `docs/spec/metro-is-just-a-bus.md` (enunciado v1.0, 2026-09-29). O PDF original está em `docs/spec/`. Há uma cópia igual em `metro-web`; ao atualizar o enunciado, atualiza as duas.
+The searchable specification is `docs/spec/metro-is-just-a-bus.md` (statement v1.0, 2026-09-29). The original PDF is in `docs/spec/`. An identical copy lives in `metro-web`; when updating the statement, update both.
 
-Antes de decidir comportamento, fronteiras de componentes ou contratos, lê esse ficheiro. Em caso de divergência, o PDF prevalece.
+Permanent agent context (SDD): `.ai/steering/` (`product.md`, `tech-stack.md`, `conventions.md`, `principles.md`) and `AGENTS.md`.
 
-Restrições fixas:
+## What to read when
 
-- Sistema distribuído. Um único backend REST com toda a funcionalidade não chega.
-- No mínimo: web de passageiros, backend core, serviço(s) de apoio implantáveis à parte, e notificações numa fronteira de aplicação independente.
-- APIs síncronas e comunicação assíncrona, com falhas, retries e duplicados tratados (sem bilhete, validação ou notificação repetidos).
-- A queda das notificações não pode derrubar a consulta da rede.
+- **Default (implementation):** `.ai/steering/` and `AGENTS.md`. Do not load the full statement only for deadlines or grading.
+- **Milestone / delivery / grading / alignment checks:** read `docs/spec/metro-is-just-a-bus.md` (milestones and evaluation criteria). PDF prevails on conflict.
+- **Domain or architecture while coding:** steering plus Technical Description / architecture sections of the statement as needed.
+
+Before deciding behavior, component boundaries, or contracts, read steering (and the statement when relevant).
+
+Fixed constraints:
+
+- Distributed system. A single REST backend with all functionality is not enough.
+- At minimum: passenger/ops web app, core backend, independently deployable supporting service(s), and notifications across an independent application boundary.
+- Synchronous APIs and asynchronous messaging, with failures, retries, and duplicates handled (no repeated ticket, validation, or notification).
+- A notification outage must not block network consultation.

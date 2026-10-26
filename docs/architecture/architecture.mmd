@@ -1,0 +1,31 @@
+%% MetroIsJustABus — Container Diagram
+
+flowchart TB
+    passenger[Passenger]
+    ops[Operational staff]
+
+    subgraph system["MetroIsJustABus"]
+        direction TB
+        web["metro-web<br/>Angular"]
+        core["metro-core<br/>C# / .NET"]
+        notifications["metro-notifications<br/>C# / .NET"]
+        db[("PostgreSQL")]
+        broker[("RabbitMQ")]
+    end
+
+    passenger -->|HTTPS| web
+    ops -->|HTTPS| web
+    web -->|"HTTP/JSON"| core
+    core -->|SQL| db
+    core -->|AMQP| broker
+    broker -->|AMQP| notifications
+
+    classDef person fill:#08427b,color:#fff,stroke:#052e56
+    classDef container fill:#1168bd,color:#fff,stroke:#0b4884
+    classDef datastore fill:#438dd5,color:#fff,stroke:#2e6295
+    classDef queue fill:#85bbf0,color:#000,stroke:#5b8fc7
+
+    class passenger,ops person
+    class web,core,notifications container
+    class db datastore
+    class broker queue

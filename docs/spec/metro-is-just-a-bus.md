@@ -1,22 +1,22 @@
-# MetroIsJustABus — especificação do projeto
+# MetroIsJustABus — project specification
 
-Fonte: enunciado *Automated Software Engineering Course Project*, versão 1.0 (2026-09-29).
-O PDF original está neste diretório: `Automated_Software_Development_Project_Complete.v1.0.pdf`.
-Este ficheiro é a transcrição consultável. Se houver divergência, o PDF prevalece.
+Source: *Automated Software Engineering Course Project* statement, version 1.0 (2026-09-29).
+The original PDF is in this directory: `Automated_Software_Development_Project_Complete.v1.0.pdf`.
+This file is the searchable transcription. If there is any conflict, the PDF prevails.
 
-A mesma pasta `docs/spec/` existe em `metro-core` e em `metro-web`. Ao atualizar o enunciado, atualiza as duas cópias.
+The same `docs/spec/` folder exists in `metro-core` and `metro-web`. When updating the statement, update both copies.
 
-## Restrições que os agentes devem respeitar
+## Constraints agents must respect
 
-- O sistema é distribuído. Um único backend com toda a funcionalidade atrás de uma REST API não cumpre o requisito.
-- No mínimo: aplicação web para passageiros, backend core do domínio, um ou mais serviços de apoio implantáveis de forma independente, e notificações atravessando uma fronteira de aplicação independente.
-- Comunicação síncrona (APIs) e assíncrona (eventos/mensagens), com interfaces e dados explícitos.
-- Falha parcial: a queda das notificações não pode impedir a consulta de linhas, paragens e horários nem outra funcionalidade não relacionada.
-- Falhas de comunicação, timeouts, indisponibilidade, retries e duplicados têm de ser tratados. Não emitir o mesmo bilhete, registar a mesma validação nem enviar a mesma notificação mais do que uma vez.
-- Operações que atravessam componentes precisam de um mecanismo de consistência justificado.
-- Ambientes de desenvolvimento e produção separados. O de desenvolvimento inclui um runner de CI/CD self-hosted. Infraestrutura e deployment versionados e reproduzíveis.
-- Pipeline CI/CDE/CD com build, testes, qualidade, artefactos versionados, validação de integração/sistema, deploy e gates antes de produção.
-- Testes unitários, de integração, de sistema/e2e, de interfaces entre componentes, análise estática e cenários de falha e recuperação.
+- The system is distributed. A single backend that exposes all functionality behind one REST API does not meet the requirement.
+- At minimum: a passenger web application, a core domain backend, one or more independently deployable supporting services, and notifications across an independent application boundary.
+- Synchronous communication (APIs) and asynchronous communication (events/messages), with explicit interfaces and data.
+- Partial failure: a notification outage must not prevent consultation of lines, stops, and schedules, or other unrelated functionality.
+- Communication failures, timeouts, unavailability, retries, and duplicates must be handled. Do not issue the same ticket, record the same validation, or send the same notification more than once.
+- Operations that span components need a justified consistency mechanism.
+- Separate development and production environments. Development includes a self-hosted CI/CD runner. Infrastructure and deployment must be versioned and reproducible.
+- CI/CDE/CD pipeline with build, tests, quality checks, versioned artifacts, integration/system validation, deploy, and gates before production.
+- Unit, integration, system/e2e, and cross-component interface tests, static analysis, and failure and recovery scenarios.
 
 ---
 

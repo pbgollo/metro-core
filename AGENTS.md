@@ -1,9 +1,23 @@
 # Metro Core
 
-API .NET do sistema **MetroIsJustABus**. A arquitetura e os comandos estão no `README.md`.
+.NET API for the **MetroIsJustABus** system. Architecture and commands are in `README.md`.
 
-## Especificação
+## What to read when
 
-A especificação do projeto (enunciado v1.0, 2026-09-29) está em [`docs/spec/metro-is-just-a-bus.md`](docs/spec/metro-is-just-a-bus.md). O PDF original está na mesma pasta. Há uma cópia igual em `metro-web/docs/spec/`; ao atualizar o enunciado, atualiza as duas.
+- **Default (build / design / code):** read [`.ai/steering/`](.ai/steering/) first. Do not invent requirements that contradict it.
+- **Milestone, delivery, grading, or “are we aligned with the statement?”:** read [`docs/spec/metro-is-just-a-bus.md`](docs/spec/metro-is-just-a-bus.md) (milestones, evaluation criteria, full constraints). If it conflicts with the PDF in the same folder, the PDF prevails.
+- **Domain / architecture / distributed constraints while coding:** steering + the Technical Description and architecture sections of the statement as needed. Skip deadlines and grading unless the user asks about a delivery.
 
-Antes de alterar comportamento de produto, fronteiras entre componentes, contratos, testes de sistema, CI/CD ou deployment, leia esse ficheiro. Não inventes requisitos que o contradigam. O sistema tem de ser distribuído: um único backend REST com toda a funcionalidade não cumpre o enunciado.
+## Steering (SDD)
+
+Permanent project context:
+- [`.ai/steering/product.md`](.ai/steering/product.md) — product and scope
+- [`.ai/steering/tech-stack.md`](.ai/steering/tech-stack.md) — stack and rationale
+- [`.ai/steering/conventions.md`](.ai/steering/conventions.md) — code and API patterns
+- [`.ai/steering/principles.md`](.ai/steering/principles.md) — non-negotiable rules
+
+## Specification
+
+Full course statement (v1.0, 2026-09-29): [`docs/spec/metro-is-just-a-bus.md`](docs/spec/metro-is-just-a-bus.md). Identical copy in `metro-web/docs/spec/`; when updating, update both.
+
+The system must be distributed: a single REST backend with all functionality does not meet the statement.
