@@ -1,0 +1,45 @@
+name: CI - Continuous Integration
+
+on:
+  push:
+    branches:
+      - main
+      - CIserver
+      - develop
+      - 'feature/**'
+      - 'bugfix/**'
+  pull_request:
+    branches:
+      - main
+      - CIserver
+      - develop
+  workflow_dispatch:
+
+jobs:
+  build:
+    name: Build Project from Repository
+    runs-on: ${{ vars.CI_RUNNER || 'ubuntu-latest' }}
+
+    steps:
+      - name: Checkout repository code
+        uses: actions/checkout@v4
+
+      - name: Setup .NET SDK 10
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '10.0.x'
+
+      - name: Cache NuGet packages
+        uses: actions/cache@v4
+        with:
+          path: ~/.nuget/packages
+          key: ${{ runner.os }}-nuget-${{ hashFiles('**/*.csproj', 'Metro.sln') }}
+          restore-keys: |
+            ${{ runner.os }}-nuget-
+
+      - name: Restore dependencies
+        run: dotnet restore Metro.sln
+
+      - name: Build solution (Release)
+        run: dotnet build Metro.sln --no-restore --configuration Release
+
